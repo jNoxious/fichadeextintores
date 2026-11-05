@@ -7,8 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,700;0,800;0,900;1,700&display=swap" rel="stylesheet">
-  <!-- Supabase JS Client via CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary-navy: #002244;
@@ -36,7 +34,7 @@
       padding: 20px 10px;
     }
 
-    /* Painel de Abas e Ações */
+    /* Painel Superior e Abas */
     .top-bar-container {
       width: 210mm;
       max-width: 100%;
@@ -97,7 +95,7 @@
     .sync-status {
       font-size: 11px;
       font-weight: 700;
-      padding: 4px 8px;
+      padding: 5px 10px;
       border-radius: 4px;
       display: inline-flex;
       align-items: center;
@@ -390,12 +388,10 @@
       cursor: pointer;
     }
 
-    /* Container de Impressão */
     #print-container {
       display: none;
     }
 
-    /* Regras de Impressão A4 */
     @media print {
       body {
         background: #ffffff;
@@ -437,7 +433,7 @@
 
     <div class="toolbar">
       <div class="toolbar-left">
-        <span id="sync-indicator" class="sync-status sync-saving">Conectando...</span>
+        <span id="sync-indicator" class="sync-status sync-saving">A ligar...</span>
         <button class="btn btn-primary" onclick="addNewBlock()">+ Novo Setor</button>
       </div>
       <div class="toolbar-right">
@@ -454,22 +450,9 @@
   <div id="print-container"></div>
 
   <script>
-// ==========================================
-    // CONFIGURAÇÃO DO SUPABASE
-    // ==========================================
-    // URL LIMPA (Sem /rest/v1/ no final)
+    // Configurações do Supabase
     const SUPABASE_URL = "https://pgjcjtbdfxznrevsyrnv.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_6UBhISzLxKn6E1dcvCD1dQ_AvWffz7h";
-    
-    let supabase = null;
-    try {
-      if (window.supabase && SUPABASE_URL && !SUPABASE_URL.includes("SEU_PROJETO")) {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      }
-    } catch (e) {
-      console.error("Erro ao instanciar Supabase:", e);
-    }
-
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnamNqdGJkZnh6bnJldnN5cm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5MDE1MTEsImV4cCI6MjEwOTQ3NzUxMX0.5MtAmk-5KEXiDNRIyTXFzTDCI0i161WG2XF7eXPc_CM";
     const RECORD_ID = "fichas_global";
 
     // Dados Iniciais Fidedignos à Folha da Imagem
@@ -543,7 +526,6 @@
     let currentAreaId = 1;
     let saveTimeout = null;
 
-    // Indicador visual de salvamento
     function setSyncStatus(status, text) {
       const el = document.getElementById("sync-indicator");
       if (!el) return;
@@ -551,92 +533,95 @@
       el.innerText = text;
     }
 
-// Inicialização do Banco de Dados
-    async function loadData() {
-      setSyncStatus("saving", "Conectando...");
-      let loaded = false;
-
-      // Carrega o cache local primeiro para não travar a tela
+    // Inicialização direta: Renderiza IMEDIATAMENTE e faz a ligação em segundo plano
+    function initApp() {
       const local = localStorage.getItem("incendio_supabase_cache");
       if (local) {
         try {
-          globalState = JSON.parse(local);
-          renderCurrentArea();
+          const parsed = JSON.parse(local);
+          if (parsed && parsed.areas) globalState = parsed;
         } catch(e) {}
       }
 
-      if (supabase) {
-        try {
-          // Timeout de 6 segundos para não ficar travado em 'Conectando...'
-          const fetchPromise = supabase
-            .from("fichas_inspecao")
-            .select("data")
-            .eq("id", RECORD_ID)
-            .maybeSingle();
-
-          const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Tempo limite esgotado")), 6000)
-          );
-
-          const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
-
-          if (error) {
-            console.error("Erro Supabase:", error);
-            setSyncStatus("error", "Erro Supabase (ver console)");
-          } else if (data && data.data) {
-            globalState = data.data;
-            loaded = true;
-            setSyncStatus("online", "● Supabase Conectado");
-            renderCurrentArea();
-          } else {
-            // Se a linha ainda não existe no Supabase, cria agora
-            await supabase
-              .from("fichas_inspecao")
-              .upsert({ id: RECORD_ID, data: globalState, updated_at: new Date().toISOString() });
-            setSyncStatus("online", "● Supabase Conectado (Novo)");
-          }
-        } catch (err) {
-          console.warn("Falha de conexão com Supabase:", err);
-          setSyncStatus("error", "Sem conexão (Usando Local)");
-        }
-      } else {
-        setSyncStatus("saving", "Modo Local");
-      }
-
+      // 1. Mostra a folha logo
       renderCurrentArea();
+
+      // 2. Consulta o Supabase via fetch REST direto (sem problemas com CDNs externas)
+      fetchSupabase();
     }
 
-    // Auto-Save com Debounce para o Supabase e LocalStorage
+    async function fetchSupabase() {
+      setSyncStatus("saving", "A ligar...");
+      const endpoint = `${SUPABASE_URL}/rest/v1/fichas_inspecao?id=eq.${RECORD_ID}&select=data`;
+
+      try {
+        const res = await fetch(endpoint, {
+          method: "GET",
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization": `Bearer ${SUPABASE_KEY}`
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
+        const rows = await res.json();
+        if (rows && rows.length > 0 && rows[0].data) {
+          globalState = rows[0].data;
+          renderCurrentArea();
+          setSyncStatus("online", "● Supabase Conectado");
+        } else {
+          // Se ainda não existir a linha, cria-a com os dados padrão
+          await pushToSupabase(globalState);
+          setSyncStatus("online", "● Supabase Conectado");
+        }
+      } catch (err) {
+        console.warn("Aviso ao ligar ao Supabase:", err);
+        setSyncStatus("online", "Modo Local (Guardado)");
+      }
+    }
+
+    async function pushToSupabase(dataToSave) {
+      const endpoint = `${SUPABASE_URL}/rest/v1/fichas_inspecao`;
+      return fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`,
+          "Content-Type": "application/json",
+          "Prefer": "resolution=merge-duplicates"
+        },
+        body: JSON.stringify({
+          id: RECORD_ID,
+          data: dataToSave,
+          updated_at: new Date().toISOString()
+        })
+      });
+    }
+
     function triggerAutoSave() {
       collectDOMToState();
-      setSyncStatus("saving", "A guardar alterações...");
+      setSyncStatus("saving", "A guardar...");
 
       if (saveTimeout) clearTimeout(saveTimeout);
       saveTimeout = setTimeout(async () => {
-        // Cache Local imediato
         localStorage.setItem("incendio_supabase_cache", JSON.stringify(globalState));
 
-        if (supabase) {
-          try {
-            const { error } = await supabase
-              .from("fichas_inspecao")
-              .upsert({ id: RECORD_ID, data: globalState, updated_at: new Date().toISOString() });
-
-            if (!error) {
-              setSyncStatus("online", "● Salvo no Supabase");
-            } else {
-              setSyncStatus("error", "Erro ao sincronizar");
-            }
-          } catch (err) {
-            setSyncStatus("error", "Erro de conexão");
+        try {
+          const res = await pushToSupabase(globalState);
+          if (res && res.ok) {
+            setSyncStatus("online", "● Salvo no Supabase");
+          } else {
+            setSyncStatus("online", "Guardado Localmente");
           }
-        } else {
-          setSyncStatus("online", "Salvo no Navegador");
+        } catch (e) {
+          setSyncStatus("online", "Guardado Localmente");
         }
-      }, 700);
+      }, 600);
     }
 
-    // SVG Vetoriais
     function getExtinguisherSVG() {
       return `
         <svg width="65" height="92" viewBox="0 0 100 150">
@@ -672,15 +657,14 @@
       return "var(--risk-baixo)";
     }
 
-    // Constrói o HTML da folha A4
     function buildSheetHTML(areaData, isPrintMode = false) {
       let blocksHTML = "";
 
-      areaData.blocks.forEach((block, bIdx) => {
+      (areaData.blocks || []).forEach((block, bIdx) => {
         const riskColor = getRiskColor(block.risk);
         let rowsHTML = "";
 
-        block.items.forEach((item, rIdx) => {
+        (block.items || []).forEach((item, rIdx) => {
           const isChecked = !!item.visto;
           const badgeHtml = isChecked 
             ? `<span class="visto-badge">OK</span>` 
@@ -794,6 +778,7 @@
 
     function renderCurrentArea() {
       const container = document.getElementById("active-sheet-container");
+      if (!container) return;
       const currentArea = globalState.areas[currentAreaId] || {
         title: "SEÇÃO CONTRAINCÊNDIO",
         subtitle: `INSPEÇÃO MENSAL DOS EXTINTORES INSTALADOS NA ÁREA ${currentAreaId}`,
@@ -957,13 +942,11 @@
       triggerAutoSave();
     }
 
-    // Impressão da Área Ativa
     function printCurrentArea() {
       collectDOMToState();
       window.print();
     }
 
-    // Impressão sequencial de todas as 5 Áreas
     function printAllAreas() {
       collectDOMToState();
       const printContainer = document.getElementById("print-container");
@@ -986,14 +969,13 @@
 
       window.print();
 
-      // Restaura visualização
       activeContainer.style.display = "block";
       printContainer.style.display = "none";
       printContainer.innerHTML = "";
     }
 
-    // Carregar na inicialização
-    window.addEventListener("DOMContentLoaded", loadData);
+    // Inicialização direta e imediata
+    initApp();
   </script>
 </body>
 </html>
