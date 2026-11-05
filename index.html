@@ -454,14 +454,21 @@
   <div id="print-container"></div>
 
   <script>
-    // ==========================================
+// ==========================================
     // CONFIGURAÇÃO DO SUPABASE
     // ==========================================
-    const SUPABASE_URL = "https://pgjcjtbdfxznrevsyrnv.supabase.co/rest/v1/"; // Substitua pela sua URL
-    const SUPABASE_ANON_KEY = "sb_publishable_6UBhISzLxKn6E1dcvCD1dQ_AvWffz7h";        // Substitua pela sua anon key
-    const supabase = (SUPABASE_URL.startsWith("http") && !SUPABASE_URL.includes("SEU_PROJETO"))
-      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-      : null;
+    // URL LIMPA (Sem /rest/v1/ no final)
+    const SUPABASE_URL = "https://pgjcjtbdfxznrevsyrnv.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_6UBhISzLxKn6E1dcvCD1dQ_AvWffz7h";
+    
+    let supabase = null;
+    try {
+      if (window.supabase && SUPABASE_URL && !SUPABASE_URL.includes("SEU_PROJETO")) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+    } catch (e) {
+      console.error("Erro ao instanciar Supabase:", e);
+    }
 
     const RECORD_ID = "fichas_global";
 
@@ -544,37 +551,56 @@
       el.innerText = text;
     }
 
-    // Inicialização do Banco de Dados
+// Inicialização do Banco de Dados
     async function loadData() {
-      setSyncStatus("saving", "Carregando dados...");
+      setSyncStatus("saving", "Conectando...");
       let loaded = false;
+
+      // Carrega o cache local primeiro para não travar a tela
+      const local = localStorage.getItem("incendio_supabase_cache");
+      if (local) {
+        try {
+          globalState = JSON.parse(local);
+          renderCurrentArea();
+        } catch(e) {}
+      }
 
       if (supabase) {
         try {
-          const { data, error } = await supabase
+          // Timeout de 6 segundos para não ficar travado em 'Conectando...'
+          const fetchPromise = supabase
             .from("fichas_inspecao")
             .select("data")
             .eq("id", RECORD_ID)
-            .single();
+            .maybeSingle();
 
-          if (!error && data && data.data) {
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Tempo limite esgotado")), 6000)
+          );
+
+          const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
+
+          if (error) {
+            console.error("Erro Supabase:", error);
+            setSyncStatus("error", "Erro Supabase (ver console)");
+          } else if (data && data.data) {
             globalState = data.data;
             loaded = true;
             setSyncStatus("online", "● Supabase Conectado");
+            renderCurrentArea();
+          } else {
+            // Se a linha ainda não existe no Supabase, cria agora
+            await supabase
+              .from("fichas_inspecao")
+              .upsert({ id: RECORD_ID, data: globalState, updated_at: new Date().toISOString() });
+            setSyncStatus("online", "● Supabase Conectado (Novo)");
           }
         } catch (err) {
-          console.warn("Falha ao buscar no Supabase, tentando local.", err);
+          console.warn("Falha de conexão com Supabase:", err);
+          setSyncStatus("error", "Sem conexão (Usando Local)");
         }
-      }
-
-      if (!loaded) {
-        const local = localStorage.getItem("incendio_supabase_cache");
-        if (local) {
-          try {
-            globalState = JSON.parse(local);
-          } catch(e) {}
-        }
-        setSyncStatus(supabase ? "online" : "saving", supabase ? "● Supabase Conectado" : "Modo Local");
+      } else {
+        setSyncStatus("saving", "Modo Local");
       }
 
       renderCurrentArea();
