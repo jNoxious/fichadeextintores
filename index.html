@@ -129,10 +129,28 @@
       width: 210mm;
       min-height: 297mm;
       background: #ffffff;
-      padding: 10mm 12mm;
+      padding: 10mm 12mm 14mm 12mm;
       box-shadow: 0 6px 20px rgba(0,0,0,0.18);
       position: relative;
       margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sheet-content {
+      flex: 1;
+    }
+
+    /* Numeração da Página no Ecrã */
+    .sheet-page-number {
+      text-align: right;
+      font-size: 11px;
+      font-weight: 800;
+      color: #334155;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding-top: 6px;
+      margin-top: auto;
     }
 
     /* Cabeçalho */
@@ -224,6 +242,8 @@
       overflow: hidden;
       margin-bottom: 9px;
       position: relative;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
     .block-header {
@@ -299,6 +319,11 @@
       font-size: 11.5px;
     }
 
+    table.data-table tr {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
     .col-tipo { width: 7.5%; }
     .col-agente { width: 8.5%; }
     .col-carga { width: 8.5%; }
@@ -338,6 +363,8 @@
       font-size: 10.5px;
       font-weight: 700;
       color: #111;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
     .block-footer-msg {
@@ -392,29 +419,58 @@
       display: none;
     }
 
+    /* REGRAS DE IMPRESSÃO PROFISSIONAL E NUMERAÇÃO DINÂMICA */
     @media print {
       body {
         background: #ffffff;
         padding: 0;
+        margin: 0;
       }
       .top-bar-container, .block-actions, .row-add-wrapper, .col-actions, .col-action-cell {
         display: none !important;
       }
       .sheet-page {
         box-shadow: none;
-        padding: 5mm 8mm;
+        padding: 0 0 10mm 0;
         width: 100%;
         min-height: auto;
+      }
+
+      #print-container {
+        display: block !important;
+      }
+
+      /* Cada página física é montada via JS com numeração própria */
+      .print-page {
+        width: 210mm;
+        height: 296mm;
+        padding: 9mm 12mm 0 12mm;
+        position: relative;
+        overflow: hidden;
+        background: #ffffff;
         page-break-after: always;
         break-after: page;
       }
-      .sheet-page:last-child {
+      .print-page:last-child {
         page-break-after: auto;
         break-after: auto;
       }
+
+      .print-page-number {
+        position: absolute;
+        bottom: 6mm;
+        right: 12mm;
+        font-size: 10.5px;
+        font-weight: 800;
+        color: #334155;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      /* margin 0 também remove o cabeçalho/rodapé do navegador (URL, 1/1) */
       @page {
         size: A4 portrait;
-        margin: 4mm;
+        margin: 0;
       }
     }
   </style>
@@ -450,12 +506,10 @@
   <div id="print-container"></div>
 
   <script>
-    // Configurações do Supabase
     const SUPABASE_URL = "https://pgjcjtbdfxznrevsyrnv.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnamNqdGJkZnh6bnJldnN5cm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5MDE1MTEsImV4cCI6MjEwOTQ3NzUxMX0.5MtAmk-5KEXiDNRIyTXFzTDCI0i161WG2XF7eXPc_CM";
     const RECORD_ID = "fichas_global";
 
-    // Dados Iniciais Fidedignos à Folha da Imagem
     const defaultData = {
       areas: {
         1: {
@@ -533,7 +587,6 @@
       el.innerText = text;
     }
 
-    // Inicialização direta: Renderiza IMEDIATAMENTE e faz a ligação em segundo plano
     function initApp() {
       const local = localStorage.getItem("incendio_supabase_cache");
       if (local) {
@@ -543,10 +596,7 @@
         } catch(e) {}
       }
 
-      // 1. Mostra a folha logo
       renderCurrentArea();
-
-      // 2. Consulta o Supabase via fetch REST direto (sem problemas com CDNs externas)
       fetchSupabase();
     }
 
@@ -563,9 +613,7 @@
           }
         });
 
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const rows = await res.json();
         if (rows && rows.length > 0 && rows[0].data) {
@@ -573,7 +621,6 @@
           renderCurrentArea();
           setSyncStatus("online", "● Supabase Conectado");
         } else {
-          // Se ainda não existir a linha, cria-a com os dados padrão
           await pushToSupabase(globalState);
           setSyncStatus("online", "● Supabase Conectado");
         }
@@ -657,8 +704,10 @@
       return "var(--risk-baixo)";
     }
 
-    function buildSheetHTML(areaData, isPrintMode = false) {
+    // Geração do HTML da folha
+    function buildSheetHTML(areaData, areaIndex, isPrintMode = false) {
       let blocksHTML = "";
+      const formattedArea = String(areaIndex).padStart(2, '0');
 
       (areaData.blocks || []).forEach((block, bIdx) => {
         const riskColor = getRiskColor(block.risk);
@@ -748,30 +797,35 @@
       });
 
       return `
-        <div class="sheet-page">
-          <div class="header-container">
-            <div class="logo-box">${getExtinguisherSVG()}</div>
-            <div class="header-text">
-              <h1 class="doc-title" ${!isPrintMode ? 'contenteditable="true" oninput="triggerAutoSave()"' : ''}>${areaData.title || "SEÇÃO CONTRAINCÊNDIO"}</h1>
-              <h2 class="doc-subtitle" ${!isPrintMode ? 'contenteditable="true" oninput="triggerAutoSave()"' : ''}>${areaData.subtitle || `INSPEÇÃO MENSAL DOS EXTINTORES INSTALADOS NA ÁREA ${currentAreaId}`}</h2>
+        <div class="sheet-page sheet-section" data-area="${formattedArea}">
+          <div class="sheet-content">
+            <div class="header-container">
+              <div class="logo-box">${getExtinguisherSVG()}</div>
+              <div class="header-text">
+                <h1 class="doc-title" ${!isPrintMode ? 'contenteditable="true" oninput="triggerAutoSave()"' : ''}>${areaData.title || "SEÇÃO CONTRAINCÊNDIO"}</h1>
+                <h2 class="doc-subtitle" ${!isPrintMode ? 'contenteditable="true" oninput="triggerAutoSave()"' : ''}>${areaData.subtitle || `INSPEÇÃO MENSAL DOS EXTINTORES INSTALADOS NA ÁREA ${areaIndex}`}</h2>
+              </div>
+              <div class="logo-box">${getShieldSVG()}</div>
             </div>
-            <div class="logo-box">${getShieldSVG()}</div>
+
+            <div class="sub-header">
+              <div class="input-box">
+                <div class="input-label">MÊS / ANO:</div>
+                <div class="input-content doc-date" ${!isPrintMode ? 'contenteditable="true" oninput="triggerAutoSave()"' : ''}>${areaData.date || "/ 2027"}</div>
+              </div>
+              <div class="input-box" style="flex: 1; max-width: 420px;">
+                <div class="input-label">RESPONSÁVEL PELA INSPEÇÃO:</div>
+                <div class="input-content doc-inspector" style="flex: 1;" ${!isPrintMode ? 'contenteditable="true" oninput="triggerAutoSave()"' : ''}>${areaData.inspector || ""}</div>
+              </div>
+            </div>
+
+            <div class="blocks-container">
+              ${blocksHTML}
+            </div>
           </div>
 
-          <div class="sub-header">
-            <div class="input-box">
-              <div class="input-label">MÊS / ANO:</div>
-              <div class="input-content doc-date" ${!isPrintMode ? 'contenteditable="true" oninput="triggerAutoSave()"' : ''}>${areaData.date || "/ 2027"}</div>
-            </div>
-            <div class="input-box" style="flex: 1; max-width: 420px;">
-              <div class="input-label">RESPONSÁVEL PELA INSPEÇÃO:</div>
-              <div class="input-content doc-inspector" style="flex: 1;" ${!isPrintMode ? 'contenteditable="true" oninput="triggerAutoSave()"' : ''}>${areaData.inspector || ""}</div>
-            </div>
-          </div>
-
-          <div class="blocks-container">
-            ${blocksHTML}
-          </div>
+          <!-- Rodapé visível na tela (a paginação real é gerada na impressão) -->
+          <div class="sheet-page-number">ÁREA ${formattedArea}</div>
         </div>
       `;
     }
@@ -786,7 +840,7 @@
         inspector: "",
         blocks: []
       };
-      container.innerHTML = buildSheetHTML(currentArea, false);
+      container.innerHTML = buildSheetHTML(currentArea, currentAreaId, false);
     }
 
     function switchArea(areaId) {
@@ -942,39 +996,198 @@
       triggerAutoSave();
     }
 
-    function printCurrentArea() {
-      collectDOMToState();
-      window.print();
+    /* ================= IMPRESSÃO PAGINADA ================= */
+    const MM = 96 / 25.4; // px por mm
+    const PRINT_CONTENT_H = (296 - 9 - 14) * MM - 6; // área útil da página (px)
+
+    function getAreaData(i) {
+      return globalState.areas[i] || {
+        title: "SEÇÃO CONTRAINCÊNDIO",
+        subtitle: `INSPEÇÃO MENSAL DOS EXTINTORES INSTALADOS NA ÁREA ${i}`,
+        date: "/ 2027",
+        inspector: "",
+        blocks: []
+      };
     }
 
-    function printAllAreas() {
+    function buildPrintHeaderHTML(areaData, areaIndex) {
+      return `
+        <div class="header-container">
+          <div class="logo-box">${getExtinguisherSVG()}</div>
+          <div class="header-text">
+            <h1>${areaData.title || "SEÇÃO CONTRAINCÊNDIO"}</h1>
+            <h2>${areaData.subtitle || `INSPEÇÃO MENSAL DOS EXTINTORES INSTALADOS NA ÁREA ${areaIndex}`}</h2>
+          </div>
+          <div class="logo-box">${getShieldSVG()}</div>
+        </div>
+        <div class="sub-header">
+          <div class="input-box">
+            <div class="input-label">MÊS / ANO:</div>
+            <div class="input-content">${areaData.date || "/ 2027"}</div>
+          </div>
+          <div class="input-box" style="flex: 1; max-width: 420px;">
+            <div class="input-label">RESPONSÁVEL PELA INSPEÇÃO:</div>
+            <div class="input-content" style="flex: 1;">${areaData.inspector || ""}</div>
+          </div>
+        </div>`;
+    }
+
+    function buildPrintBlockHTML(block, items, withFooter, continued) {
+      const rows = items.map(item => `
+        <tr>
+          <td>${item.tipo || ""}</td>
+          <td>${item.agente || ""}</td>
+          <td>${item.carga || ""}</td>
+          <td class="col-loc">${item.loc || ""}</td>
+          <td>${item.n2 || ""}</td>
+          <td>${item.n3 || ""}</td>
+          <td class="col-visto">${item.visto ? '<span class="visto-badge">OK</span>' : '<span class="visto-empty">&nbsp;</span>'}</td>
+          <td class="col-obs">${item.obs || ""}</td>
+        </tr>`).join("");
+
+      const footer = withFooter ? `
+        <div class="block-footer">
+          <div class="block-footer-msg">Declaro ciência da inspeção dos dispositivos de segurança contra incêndio desta localidade.</div>
+          <div class="signature-grid">
+            <div class="sig-field"><span>Ass. do Responsável:</span><div>${block.signatures?.resp || ""}</div></div>
+            <div class="sig-field"><span>Nome de Guerra:</span><div>${block.signatures?.guerra || ""}</div></div>
+            <div class="sig-field"><span>Rubrica:</span><div>${block.signatures?.rubrica || ""}</div></div>
+          </div>
+        </div>` : "";
+
+      return `
+        <div class="block-card">
+          <div class="block-header">
+            <span class="sector-title">${block.sector}${continued ? " (CONT.)" : ""}</span>
+            <span>—</span>
+            <span class="badge-risk" style="background-color: ${getRiskColor(block.risk)}">${block.risk}</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="col-tipo">Tipo</th>
+                <th class="col-agente">Agente</th>
+                <th class="col-carga">Carga</th>
+                <th class="col-loc">Localização</th>
+                <th class="col-nivel">2º nível</th>
+                <th class="col-nivel">3º nível</th>
+                <th class="col-visto">Visto</th>
+                <th class="col-obs">Observações</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+          ${footer}
+        </div>`;
+    }
+
+    // Monta as páginas físicas de uma área, medindo a altura real de cada bloco
+    function paginateArea(areaData, areaIndex) {
+      const measure = document.createElement("div");
+      measure.style.cssText = "position:absolute;left:-10000px;top:0;width:186mm;visibility:hidden;display:flow-root;";
+      document.body.appendChild(measure);
+
+      const h = (html) => {
+        measure.innerHTML = `<div style="display:flow-root">${html}</div>`;
+        return measure.firstChild.offsetHeight;
+      };
+
+      const headerHTML = buildPrintHeaderHTML(areaData, areaIndex);
+      const avail = PRINT_CONTENT_H - h(headerHTML);
+
+      const pages = [[]];
+      let used = 0;
+      const newPage = () => { pages.push([]); used = 0; };
+
+      (areaData.blocks || []).forEach(block => {
+        const items = block.items || [];
+        let start = 0;
+        let guard = 0;
+
+        do {
+          if (++guard > 500) break;
+          const continued = start > 0;
+          const rest = items.slice(start);
+          const full = h(buildPrintBlockHTML(block, rest, true, continued));
+          const cur = pages[pages.length - 1];
+
+          // Cabe inteiro (com assinaturas) na página atual
+          if (used + full <= avail) {
+            cur.push(buildPrintBlockHTML(block, rest, true, continued));
+            used += full;
+            start = items.length;
+            break;
+          }
+
+          // Não cabe aqui, mas cabe inteiro em uma página nova
+          if (cur.length > 0 && full <= avail) {
+            newPage();
+            continue;
+          }
+
+          // Bloco maior que o espaço: divide por linhas
+          let k = 0; // quantidade de linhas que cabem
+          while (k < rest.length &&
+                 used + h(buildPrintBlockHTML(block, rest.slice(0, k + 1), false, continued)) <= avail) {
+            k++;
+          }
+          // se todas as linhas cabem mas as assinaturas não, leva a última linha junto para a próxima página
+          if (k === rest.length) k = rest.length - 1;
+          if (k === 0) {
+            if (cur.length > 0) { newPage(); continue; }
+            k = 1; // página vazia: força ao menos 1 linha para evitar laço infinito
+          }
+          const part = rest.slice(0, k);
+          const partHTML = buildPrintBlockHTML(block, part, false, continued);
+          cur.push(partHTML);
+          used += h(partHTML);
+          start += part.length;
+          newPage();
+        } while (start < items.length);
+      });
+
+      document.body.removeChild(measure);
+
+      // remove página final vazia (criada após dividir bloco)
+      while (pages.length > 1 && pages[pages.length - 1].length === 0) pages.pop();
+
+      const fa = String(areaIndex).padStart(2, "0");
+      return pages.map((blocks, idx) => `
+        <div class="print-page">
+          ${headerHTML}
+          <div class="blocks-container">${blocks.join("")}</div>
+          <div class="print-page-number">ÁREA ${fa} - PÁG. ${String(idx + 1).padStart(2, "0")}</div>
+        </div>`).join("");
+    }
+
+    async function runPrint(areaIds) {
       collectDOMToState();
+      try { await document.fonts.ready; } catch (e) {}
+
       const printContainer = document.getElementById("print-container");
       const activeContainer = document.getElementById("active-sheet-container");
 
-      printContainer.innerHTML = "";
-      for (let i = 1; i <= 5; i++) {
-        const areaData = globalState.areas[i] || {
-          title: "SEÇÃO CONTRAINCÊNDIO",
-          subtitle: `INSPEÇÃO MENSAL DOS EXTINTORES INSTALADOS NA ÁREA ${i}`,
-          date: "/ 2027",
-          inspector: "",
-          blocks: []
-        };
-        printContainer.innerHTML += buildSheetHTML(areaData, true);
-      }
+      printContainer.innerHTML = areaIds
+        .map(i => paginateArea(getAreaData(i), i))
+        .join("");
 
       activeContainer.style.display = "none";
       printContainer.style.display = "block";
 
-      window.print();
+      const restore = () => {
+        activeContainer.style.display = "block";
+        printContainer.style.display = "none";
+        printContainer.innerHTML = "";
+        window.removeEventListener("afterprint", restore);
+      };
+      window.addEventListener("afterprint", restore);
 
-      activeContainer.style.display = "block";
-      printContainer.style.display = "none";
-      printContainer.innerHTML = "";
+      window.print();
     }
 
-    // Inicialização direta e imediata
+    function printCurrentArea() { runPrint([currentAreaId]); }
+    function printAllAreas() { runPrint([1, 2, 3, 4, 5]); }
+
     initApp();
   </script>
 </body>
