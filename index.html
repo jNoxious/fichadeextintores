@@ -34,6 +34,100 @@
       padding: 20px 10px;
     }
 
+    /* Modal / Tela de Login */
+    #auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .login-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      text-align: center;
+      border-top: 6px solid var(--primary-navy);
+    }
+
+    .login-card h2 {
+      color: var(--primary-navy);
+      font-size: 19px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .login-card p {
+      color: #64748b;
+      font-size: 12px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .login-group {
+      text-align: left;
+      margin-bottom: 14px;
+    }
+
+    .login-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      color: #334155;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .login-input:focus {
+      border-color: var(--primary-navy);
+    }
+
+    .btn-login {
+      width: 100%;
+      background: var(--primary-navy);
+      color: #ffffff;
+      font-weight: 800;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      margin-top: 8px;
+      transition: opacity 0.2s;
+    }
+
+    .btn-login:hover {
+      opacity: 0.9;
+    }
+
+    .login-error {
+      color: #dc2626;
+      font-size: 11.5px;
+      font-weight: 700;
+      margin-top: 10px;
+      display: none;
+    }
+
     /* Painel Superior e Abas */
     .top-bar-container {
       width: 210mm;
@@ -122,6 +216,8 @@
     .btn-primary { background: #002244; color: #fff; }
     .btn-success { background: #15803d; color: #fff; }
     .btn-neutral { background: #475569; color: #fff; }
+    .btn-backup { background: #0284c7; color: #fff; }
+    .btn-logout { background: #991b1b; color: #fff; }
     .btn-danger { background: #dc2626; color: #fff; padding: 3px 6px; font-size: 11px; }
 
     /* Folha A4 */
@@ -141,7 +237,6 @@
       flex: 1;
     }
 
-    /* Numeração da Página no Ecrã */
     .sheet-page-number {
       text-align: right;
       font-size: 11px;
@@ -419,8 +514,11 @@
       display: none;
     }
 
-    /* REGRAS DE IMPRESSÃO PROFISSIONAL E NUMERAÇÃO DINÂMICA */
+    /* REGRAS DE IMPRESSÃO */
     @media print {
+      #auth-overlay {
+        display: none !important;
+      }
       body {
         background: #ffffff;
         padding: 0;
@@ -440,7 +538,6 @@
         display: block !important;
       }
 
-      /* Cada página física é montada via JS com numeração própria */
       .print-page {
         width: 210mm;
         height: 296mm;
@@ -467,7 +564,6 @@
         text-transform: uppercase;
       }
 
-      /* margin 0 também remove o cabeçalho/rodapé do navegador (URL, 1/1) */
       @page {
         size: A4 portrait;
         margin: 0;
@@ -476,6 +572,26 @@
   </style>
 </head>
 <body>
+
+  <!-- Modal de Login -->
+  <div id="auth-overlay">
+    <div class="login-card">
+      <h2>Acesso Restrito</h2>
+      <p>Seção Contraincêndio</p>
+      <form onsubmit="handleLoginSubmit(event)">
+        <div class="login-group">
+          <label>Usuário</label>
+          <input type="text" id="login-username" class="login-input" placeholder="secaoextintores" required autocomplete="username">
+        </div>
+        <div class="login-group">
+          <label>Senha</label>
+          <input type="password" id="login-password" class="login-input" placeholder="••••••••••••" required autocomplete="current-password">
+        </div>
+        <button type="submit" id="btn-login-submit" class="btn-login">Entrar</button>
+        <div id="login-error-msg" class="login-error">Usuário ou senha incorretos.</div>
+      </form>
+    </div>
+  </div>
 
   <!-- Barra de Seleção de Áreas e Ferramentas -->
   <div class="top-bar-container">
@@ -491,10 +607,14 @@
       <div class="toolbar-left">
         <span id="sync-indicator" class="sync-status sync-saving">A ligar...</span>
         <button class="btn btn-primary" onclick="addNewBlock()">+ Novo Setor</button>
+        <button class="btn btn-backup" onclick="downloadBackup()">⬇️ Baixar Backup</button>
+        <button class="btn btn-backup" onclick="triggerUploadBackup()">⬆️ Carregar Backup</button>
+        <input type="file" id="backup-file-input" accept=".json" style="display: none;" onchange="handleBackupUpload(event)">
       </div>
       <div class="toolbar-right">
         <button class="btn btn-neutral" onclick="printCurrentArea()">🖨️ Imprimir Área Atual</button>
         <button class="btn btn-success" onclick="printAllAreas()">🖨️ Imprimir Todas (1 a 5)</button>
+        <button class="btn btn-logout" onclick="logoutSession()">Sair</button>
       </div>
     </div>
   </div>
@@ -579,7 +699,136 @@
     let globalState = JSON.parse(JSON.stringify(defaultData));
     let currentAreaId = 1;
     let saveTimeout = null;
+    let authToken = null;
 
+    /* ================= AUTENTICAÇÃO SUPABASE ================= */
+    async function checkAuthSession() {
+      const savedAuth = localStorage.getItem("incendio_auth_session");
+      if (savedAuth) {
+        try {
+          const authData = JSON.parse(savedAuth);
+          if (authData && authData.access_token) {
+            authToken = authData.access_token;
+            document.getElementById("auth-overlay").style.display = "none";
+            initApp();
+            return;
+          }
+        } catch(e) {}
+      }
+      document.getElementById("auth-overlay").style.display = "flex";
+    }
+
+    async function handleLoginSubmit(event) {
+      event.preventDefault();
+      const userField = document.getElementById("login-username").value.trim();
+      const passField = document.getElementById("login-password").value.trim();
+      const btn = document.getElementById("btn-login-submit");
+      const errBox = document.getElementById("login-error-msg");
+
+      errBox.style.display = "none";
+      btn.disabled = true;
+      btn.innerText = "A autenticar...";
+
+      // Se for apenas o nome de usuário, converte para o formato de email do supabase
+      const email = userField.includes("@") ? userField : `${userField}@extintores.local`;
+
+      // Autenticação direta via Supabase Auth REST API
+      let authSuccess = false;
+      try {
+        const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+          method: "POST",
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email: email, password: passField })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          authToken = data.access_token;
+          localStorage.setItem("incendio_auth_session", JSON.stringify({ access_token: authToken }));
+          authSuccess = true;
+        }
+      } catch (err) {
+        console.warn("Falha de rede ao tentar Supabase Auth:", err);
+      }
+
+      // Verificação de fallback offline para credenciais fornecidas
+      if (!authSuccess) {
+        if ((userField.toLowerCase() === "secaoextintores" || email === "secaoextintores@extintores.local") && passField === "sciextintores2026**") {
+          authToken = "offline_valid_token";
+          localStorage.setItem("incendio_auth_session", JSON.stringify({ access_token: authToken }));
+          authSuccess = true;
+        }
+      }
+
+      btn.disabled = false;
+      btn.innerText = "Entrar";
+
+      if (authSuccess) {
+        document.getElementById("auth-overlay").style.display = "none";
+        initApp();
+      } else {
+        errBox.innerText = "Usuário ou senha incorretos.";
+        errBox.style.display = "block";
+      }
+    }
+
+    function logoutSession() {
+      if (confirm("Deseja realmente sair do sistema?")) {
+        localStorage.removeItem("incendio_auth_session");
+        window.location.reload();
+      }
+    }
+
+    /* ================= BACKUP DOWNLOAD / UPLOAD ================= */
+    function downloadBackup() {
+      collectDOMToState();
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(globalState, null, 2));
+      const downloadAnchor = document.createElement("a");
+      const dateStr = new Date().toISOString().split("T")[0];
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `backup_extintores_${dateStr}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function triggerUploadBackup() {
+      document.getElementById("backup-file-input").click();
+    }
+
+    function handleBackupUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        try {
+          const json = JSON.parse(e.target.result);
+          if (json && json.areas) {
+            if (confirm("Tem certeza que deseja restaurar este backup? Todos os dados atuais serão substituídos.")) {
+              globalState = json;
+              localStorage.setItem("incendio_supabase_cache", JSON.stringify(globalState));
+              renderCurrentArea();
+              setSyncStatus("saving", "A atualizar Supabase...");
+              await pushToSupabase(globalState);
+              setSyncStatus("online", "● Backup Carregado & Salvo");
+              alert("Backup restaurado e sincronizado com sucesso!");
+            }
+          } else {
+            alert("Arquivo de backup inválido: formato incompatível.");
+          }
+        } catch (err) {
+          alert("Erro ao ler o arquivo JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    /* ================= APLICAÇÃO PRINCIPAL ================= */
     function setSyncStatus(status, text) {
       const el = document.getElementById("sync-indicator");
       if (!el) return;
@@ -600,6 +849,14 @@
       fetchSupabase();
     }
 
+    function getAuthHeaders() {
+      const bearer = (authToken && authToken !== "offline_valid_token") ? authToken : SUPABASE_KEY;
+      return {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${bearer}`
+      };
+    }
+
     async function fetchSupabase() {
       setSyncStatus("saving", "A ligar...");
       const endpoint = `${SUPABASE_URL}/rest/v1/fichas_inspecao?id=eq.${RECORD_ID}&select=data`;
@@ -607,10 +864,7 @@
       try {
         const res = await fetch(endpoint, {
           method: "GET",
-          headers: {
-            "apikey": SUPABASE_KEY,
-            "Authorization": `Bearer ${SUPABASE_KEY}`
-          }
+          headers: getAuthHeaders()
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -635,8 +889,7 @@
       return fetch(endpoint, {
         method: "POST",
         headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`,
+          ...getAuthHeaders(),
           "Content-Type": "application/json",
           "Prefer": "resolution=merge-duplicates"
         },
@@ -704,7 +957,6 @@
       return "var(--risk-baixo)";
     }
 
-    // Geração do HTML da folha
     function buildSheetHTML(areaData, areaIndex, isPrintMode = false) {
       let blocksHTML = "";
       const formattedArea = String(areaIndex).padStart(2, '0');
@@ -824,7 +1076,6 @@
             </div>
           </div>
 
-          <!-- Rodapé visível na tela (a paginação real é gerada na impressão) -->
           <div class="sheet-page-number">ÁREA ${formattedArea}</div>
         </div>
       `;
@@ -997,8 +1248,8 @@
     }
 
     /* ================= IMPRESSÃO PAGINADA ================= */
-    const MM = 96 / 25.4; // px por mm
-    const PRINT_CONTENT_H = (296 - 9 - 14) * MM - 6; // área útil da página (px)
+    const MM = 96 / 25.4;
+    const PRINT_CONTENT_H = (296 - 9 - 14) * MM - 6;
 
     function getAreaData(i) {
       return globalState.areas[i] || {
@@ -1058,7 +1309,7 @@
       return `
         <div class="block-card">
           <div class="block-header">
-            <span class="sector-title">${block.sector}${continued ? " (CONT.)" : ""}</span>
+            <span class="sector-title">${block.sector}${continued ? " (continuação)" : ""}</span>
             <span>—</span>
             <span class="badge-risk" style="background-color: ${getRiskColor(block.risk)}">${block.risk}</span>
           </div>
@@ -1081,7 +1332,6 @@
         </div>`;
     }
 
-    // Monta as páginas físicas de uma área, medindo a altura real de cada bloco
     function paginateArea(areaData, areaIndex) {
       const measure = document.createElement("div");
       measure.style.cssText = "position:absolute;left:-10000px;top:0;width:186mm;visibility:hidden;display:flow-root;";
@@ -1111,7 +1361,6 @@
           const full = h(buildPrintBlockHTML(block, rest, true, continued));
           const cur = pages[pages.length - 1];
 
-          // Cabe inteiro (com assinaturas) na página atual
           if (used + full <= avail) {
             cur.push(buildPrintBlockHTML(block, rest, true, continued));
             used += full;
@@ -1119,23 +1368,20 @@
             break;
           }
 
-          // Não cabe aqui, mas cabe inteiro em uma página nova
           if (cur.length > 0 && full <= avail) {
             newPage();
             continue;
           }
 
-          // Bloco maior que o espaço: divide por linhas
-          let k = 0; // quantidade de linhas que cabem
+          let k = 0;
           while (k < rest.length &&
                  used + h(buildPrintBlockHTML(block, rest.slice(0, k + 1), false, continued)) <= avail) {
             k++;
           }
-          // se todas as linhas cabem mas as assinaturas não, leva a última linha junto para a próxima página
           if (k === rest.length) k = rest.length - 1;
           if (k === 0) {
             if (cur.length > 0) { newPage(); continue; }
-            k = 1; // página vazia: força ao menos 1 linha para evitar laço infinito
+            k = 1;
           }
           const part = rest.slice(0, k);
           const partHTML = buildPrintBlockHTML(block, part, false, continued);
@@ -1148,7 +1394,6 @@
 
       document.body.removeChild(measure);
 
-      // remove página final vazia (criada após dividir bloco)
       while (pages.length > 1 && pages[pages.length - 1].length === 0) pages.pop();
 
       const fa = String(areaIndex).padStart(2, "0");
@@ -1188,7 +1433,8 @@
     function printCurrentArea() { runPrint([currentAreaId]); }
     function printAllAreas() { runPrint([1, 2, 3, 4, 5]); }
 
-    initApp();
+    // Inicia verificando se já há sessão ativa
+    checkAuthSession();
   </script>
 </body>
 </html>
