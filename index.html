@@ -1310,9 +1310,9 @@
       const rows = monthsList.map(m => `
         <tr>
           <td class="col-m">${m}</td>
-          <td class="col-status">[ &nbsp; ] CONFORME</td>
+          <td class="col-status"><!--[ &nbsp; ] CONFORME--></td>
           <td class="col-rub"><div class="cell-editable"></div></td>
-          <td class="col-dt">/ &nbsp; /</td>
+          <td class="col-dt"><!--/ &nbsp; /--></td>
         </tr>
       `).join("");
 
@@ -1345,11 +1345,11 @@
                   <tr>
                     <td>
                       <span class="field-lbl">AGENTE / TIPO:</span><br>
-                      <div class="cell-editable tag-field-tipo" style="font-weight:700; color:var(--primary-navy);" ${ed}>${tagData.tipo || "PQS ABC"}</div>
+                      <div class="cell-editable tag-field-tipo" style="font-weight:700; color:var(--primary-navy);"></div>
                     </td>
                     <td>
                       <span class="field-lbl">CAPACIDADE:</span><br>
-                      <div class="cell-editable tag-field-cap" style="font-weight:700;" ${ed}>${tagData.cap || "06 KG"}</div>
+                      <div class="cell-editable tag-field-cap" style="font-weight:700;"></div>
                     </td>
                   </tr>
                   <tr>
