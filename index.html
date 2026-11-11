@@ -512,6 +512,289 @@
     }
 
     /* ========================================================
+       ESTILOS EXCLUSIVOS: RELATÓRIO QUANTITATIVO
+       ======================================================== */
+    .report-page {
+      background: #ffffff;
+    }
+
+    .report-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+      gap: 6px;
+      margin-bottom: 11px;
+    }
+
+    .report-kpi-card {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 7px 6px;
+      text-align: center;
+    }
+
+    .report-kpi-card.kpi-total {
+      background: var(--primary-navy);
+      border-color: var(--primary-navy);
+      color: #ffffff;
+    }
+
+    .report-kpi-card.kpi-total .kpi-label { color: #93c5fd; }
+    .report-kpi-card.kpi-total .kpi-value { color: #ffffff; }
+    .report-kpi-card.kpi-total .kpi-sub { color: #cbd5e1; }
+
+    .report-kpi-card.kpi-alert {
+      background: #fef2f2;
+      border-color: #ef4444;
+    }
+
+    .kpi-label {
+      font-size: 8.5px;
+      font-weight: 800;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .kpi-value {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--primary-navy);
+      line-height: 1.15;
+      margin: 2px 0;
+    }
+
+    .kpi-sub {
+      font-size: 7.8px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    .report-section-title {
+      background: var(--primary-navy);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 6px 12px;
+      border-radius: 5px 5px 0 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .report-section-title.standalone {
+      border-radius: 6px;
+      margin-top: 14px;
+      margin-bottom: 12px;
+    }
+
+    table.report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-bottom: 6px;
+      border: 1.5px solid var(--primary-navy);
+      border-top: none;
+    }
+
+    table.report-table th, table.report-table td {
+      border: 1px solid #cbd5e1;
+      padding: 4.5px 6px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    table.report-table th {
+      background: #f1f5f9;
+      color: var(--primary-navy);
+      font-weight: 800;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    table.report-table th.th-total-col {
+      background: #e2e8f0;
+      color: var(--primary-navy);
+      font-weight: 900;
+    }
+
+    table.report-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    table.report-table .report-type-cell {
+      text-align: left;
+      padding-left: 10px;
+      font-weight: 800;
+      color: var(--primary-navy);
+    }
+
+    .td-grand-total {
+      background: var(--primary-navy) !important;
+      color: #ffffff !important;
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    .report-table-total-row td {
+      background: #e2e8f0;
+      font-weight: 900;
+      color: var(--primary-navy);
+      border-top: 2px solid var(--primary-navy);
+    }
+
+    .report-areas-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+
+    .report-area-card {
+      border: 1.5px solid var(--primary-navy);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .report-area-header {
+      background: var(--primary-navy);
+      color: #ffffff;
+      padding: 5px 8px;
+      font-size: 10.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .report-area-badge {
+      background: rgba(255, 255, 255, 0.22);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 9.5px;
+      font-weight: 800;
+    }
+
+    .report-area-body {
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 3.5px;
+      flex: 1;
+    }
+
+    .report-count-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9.5px;
+      padding: 3px 5px;
+      border-radius: 3px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .report-count-row.has-qty {
+      background: #f0fdf4;
+      color: #166534;
+      font-weight: 700;
+    }
+
+    .report-count-row.has-qty b {
+      color: #15803d;
+      font-size: 10.5px;
+    }
+
+    .report-count-row.fora-qty {
+      background: #fef2f2;
+      color: #991b1b;
+      font-weight: 800;
+      border: 1px solid #fecaca;
+    }
+
+    .report-count-row.fora-qty b {
+      color: #dc2626;
+      font-size: 10.5px;
+    }
+
+    .report-count-row.zero-qty {
+      color: #94a3b8;
+    }
+
+    .report-count-row.zero-qty b {
+      color: #94a3b8;
+    }
+
+    /* Box de detalhamento dos itens fora do padrão */
+    .report-divergences-box {
+      border: 1.5px solid #dc2626;
+      border-radius: 6px;
+      background: #fff5f5;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .divergences-header {
+      background: #dc2626;
+      color: #ffffff;
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    table.divergences-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5px;
+    }
+
+    table.divergences-table th, table.divergences-table td {
+      border: 1px solid #fecaca;
+      padding: 3px 6px;
+      text-align: left;
+    }
+
+    table.divergences-table th {
+      background: #fee2e2;
+      color: #991b1b;
+      font-weight: 800;
+      font-size: 9px;
+      text-transform: uppercase;
+    }
+
+    table.divergences-table td {
+      background: #ffffff;
+      color: #1e293b;
+    }
+
+    .report-footer-box {
+      border: 1.5px solid var(--primary-navy);
+      border-radius: 6px;
+      background: #fafbfc;
+      padding: 6px 10px;
+      margin-top: 4px;
+    }
+
+    .report-footer-msg {
+      text-align: center;
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* ========================================================
        ESTILOS EXCLUSIVOS: ETIQUETAS APRIMORADAS (4 POR A4)
        ======================================================== */
     .tags-page-container {
@@ -772,6 +1055,18 @@
         break-after: auto;
       }
 
+      .print-report-sheet {
+        width: 210mm;
+        height: 296mm;
+        padding: 7mm 12mm 0 12mm !important;
+        position: relative;
+        overflow: hidden;
+        background: #ffffff;
+        page-break-after: always;
+        break-after: page;
+        box-sizing: border-box;
+      }
+
       .print-page-number {
         position: absolute;
         bottom: 6mm;
@@ -835,6 +1130,7 @@
       <button class="tab-btn" onclick="switchArea(4)">Área 4</button>
       <button class="tab-btn" onclick="switchArea(5)">Área 5</button>
       <button class="tab-btn" style="border-color: #0284c7; color: #0284c7;" onclick="switchArea('tags')">🏷️ Etiquetas</button>
+      <button class="tab-btn" style="border-color: #15803d; color: #15803d;" onclick="switchArea('report')">📊 Relatório</button>
     </div>
 
     <div class="toolbar">
@@ -853,7 +1149,7 @@
     </div>
   </div>
 
-  <!-- Exibição da Folha Ativa (Áreas 1 a 5 ou Etiquetas) -->
+  <!-- Exibição da Folha Ativa (Áreas 1 a 5, Etiquetas ou Relatório) -->
   <div id="active-sheet-container"></div>
 
   <!-- Contentor Temporário para Impressão -->
@@ -886,7 +1182,7 @@
                 { tipo: "PQS", agente: "ABC", carga: "06 KG", loc: "Sala do Oficial de Dia", n2: "2027", n3: "2031", visto: true, obs: "" },
                 { tipo: "CO₂", agente: "---", carga: "06 KG", loc: "Casa de Força", n2: "2027", n3: "2031", visto: false, obs: "" },
                 { tipo: "CO₂", agente: "---", carga: "06 KG", loc: "Torre GW Portão", n2: "2027", n3: "2031", visto: false, obs: "" },
-                { tipo: "EM", agente: "ABC", carga: "09 L", loc: "Torre GW Casinha", n2: "2027", n3: "2031", visto: false, obs: "" }
+                { tipo: "EM", agente: "EM", carga: "09 L", loc: "Torre GW Casinha", n2: "2027", n3: "2031", visto: false, obs: "" }
               ]
             },
             {
@@ -944,7 +1240,7 @@
     let globalState = JSON.parse(JSON.stringify(defaultData));
     let currentAreaId = 1;
     let saveTimeout = null;
-    let session = null; // { access_token, refresh_token, expires_at, offline }
+    let session = null;
 
     /* ================= SESSÃO / AUTENTICAÇÃO SUPABASE ================= */
     function storeSession(d) {
@@ -986,7 +1282,6 @@
       };
     }
 
-    // fetch para o Supabase: renova o token se estiver expirado e tenta de novo em caso de 401
     async function supaFetch(url, opts = {}) {
       if (session && session.expires_at && (session.expires_at * 1000 - Date.now()) < 60000) {
         await refreshSession();
@@ -1004,7 +1299,6 @@
         if (renewed) {
           res = await doFetch();
         } else {
-          // sessão expirou e não renovou: tenta com a chave anon
           session = { access_token: null, refresh_token: null, expires_at: null, offline: true };
           localStorage.setItem(SESSION_KEY, JSON.stringify(session));
           res = await doFetch();
@@ -1063,7 +1357,6 @@
         console.warn("Falha de rede ao tentar Supabase Auth:", err);
       }
 
-      // Fallback local (NÃO grava com o usuário do Supabase; usa a chave anon)
       if (!authSuccess) {
         if ((userField.toLowerCase() === "secaoextintores" || email === "secaoextintores@extintores.local") && passField === "sciextintores2026**") {
           storeOfflineSession();
@@ -1130,7 +1423,6 @@
       return "Erro do servidor.";
     }
 
-    // Tenta gravar o estado atual; marca como pendente se falhar
     async function savePending() {
       setSyncStatus("saving", "A guardar...");
       localStorage.setItem(CACHE_KEY, JSON.stringify(globalState));
@@ -1158,7 +1450,6 @@
     async function fetchSupabase() {
       setSyncStatus("saving", "A ligar...");
 
-      // Se há alterações locais que não chegaram ao servidor, envia-as primeiro (não sobrescreve com dados antigos)
       if (localStorage.getItem(PENDING_KEY)) {
         await savePending();
         return;
@@ -1302,6 +1593,357 @@
     }
 
     /* ========================================================
+       SCRIPT DO RELATÓRIO QUANTITATIVO (SOMENTE SCRIPT)
+       ======================================================== */
+    function classifyExtinguisher(tipo, agente) {
+      const t = (tipo || "").toUpperCase().trim().replace(/₂/g, "2");
+      const a = (agente || "").toUpperCase().trim().replace(/₂/g, "2");
+      const rawCombo = `${t} ${a}`.trim();
+
+      // 1. PQS ABC
+      if ((t === "PQS" && a.includes("ABC")) || rawCombo === "PQS ABC" || (t.includes("PQS") && t.includes("ABC") && (!a || a === "---" || a === "-" || a === "ABC"))) {
+        return { type: "PQS ABC", isStandard: true, raw: rawCombo };
+      }
+
+      // 2. PQS BC
+      if ((t === "PQS" && a.includes("BC") && !a.includes("ABC")) || rawCombo === "PQS BC" || (t.includes("PQS") && t.includes("BC") && !t.includes("ABC") && (!a || a === "---" || a === "-" || a === "BC"))) {
+        return { type: "PQS BC", isStandard: true, raw: rawCombo };
+      }
+
+      // 3. CO2 CO2
+      if ((t === "CO2" || t.includes("CO2")) && (a === "CO2" || a.includes("CO2") || a === "---" || a === "-" || a === "")) {
+        return { type: "CO2 CO2", isStandard: true, raw: rawCombo };
+      }
+
+      // 4. AGUA AGUA (Água Pressurizada / AP / Água)
+      if ((t in { "AGUA": 1, "ÁGUA": 1, "AP": 1 } || t.includes("AGUA") || t.includes("ÁGUA")) && (a in { "AGUA": 1, "ÁGUA": 1, "AP": 1, "---": 1, "-": 1, "": 1 } || a.includes("AGUA") || a.includes("ÁGUA"))) {
+        return { type: "AGUA AGUA", isStandard: true, raw: rawCombo };
+      }
+      if (rawCombo === "AGUA AGUA" || rawCombo === "ÁGUA ÁGUA" || rawCombo === "AGUA" || rawCombo === "ÁGUA" || rawCombo === "AP AP") {
+        return { type: "AGUA AGUA", isStandard: true, raw: rawCombo };
+      }
+
+      // 5. EM EM (Espuma Mecânica)
+      if ((t === "EM" || t.includes("ESPUMA")) && (a === "EM" || a.includes("ESPUMA") || a === "---" || a === "-" || a === "")) {
+        return { type: "EM EM", isStandard: true, raw: rawCombo };
+      }
+      if (rawCombo === "EM EM" || rawCombo === "EM" || rawCombo.includes("ESPUMA MECANICA") || rawCombo.includes("ESPUMA MECÂNICA")) {
+        return { type: "EM EM", isStandard: true, raw: rawCombo };
+      }
+
+      // 6. H H (Hidrante)
+      if ((t === "H" || t === "HID" || t.includes("HIDRANTE")) && (a === "H" || a === "HID" || a.includes("HIDRANTE") || a === "---" || a === "-" || a === "")) {
+        return { type: "H H", isStandard: true, raw: rawCombo };
+      }
+      if (rawCombo === "H H" || rawCombo === "H" || rawCombo === "HIDRANTE") {
+        return { type: "H H", isStandard: true, raw: rawCombo };
+      }
+
+      // Fora do Padrão
+      return { type: "FORA DO PADRÃO", isStandard: false, raw: rawCombo || "(Tipo/Agente Vazio)" };
+    }
+
+    function calculateExtinguisherStats() {
+      const standardTypes = ["PQS ABC", "PQS BC", "CO2 CO2", "AGUA AGUA", "EM EM", "H H", "FORA DO PADRÃO"];
+      const countsByArea = { 1: {}, 2: {}, 3: {}, 4: {}, 5: {} };
+      const totalByArea = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+      const totalByType = {};
+      const nonStandardItems = [];
+      let grandTotal = 0;
+
+      standardTypes.forEach(t => {
+        totalByType[t] = 0;
+        for (let i = 1; i <= 5; i++) {
+          countsByArea[i][t] = 0;
+        }
+      });
+
+      for (let a = 1; a <= 5; a++) {
+        const area = globalState.areas[a];
+        if (!area || !area.blocks) continue;
+
+        area.blocks.forEach(block => {
+          (block.items || []).forEach(item => {
+            const res = classifyExtinguisher(item.tipo, item.agente);
+            countsByArea[a][res.type] = (countsByArea[a][res.type] || 0) + 1;
+            totalByArea[a]++;
+            totalByType[res.type] = (totalByType[res.type] || 0) + 1;
+            grandTotal++;
+
+            if (!res.isStandard) {
+              nonStandardItems.push({
+                area: a,
+                sector: block.sector || "Setor",
+                loc: item.loc || "Sem localização",
+                tipo: item.tipo || "—",
+                agente: item.agente || "—",
+                carga: item.carga || "—"
+              });
+            }
+          });
+        });
+      }
+
+      return { countsByArea, totalByArea, totalByType, standardTypes, grandTotal, nonStandardItems };
+    }
+
+    function buildReportSheetHTML(isPrintMode = false) {
+      const stats = calculateExtinguisherStats();
+      const dataHoje = new Date().toLocaleDateString('pt-BR');
+      const dateArea1 = globalState.areas[1]?.date || "/ 2027";
+      const foraCount = stats.totalByType["FORA DO PADRÃO"] || 0;
+
+      // 1. Tabela Consolidada (Todas as Áreas)
+      let tableRowsHTML = "";
+      stats.standardTypes.forEach(t => {
+        const isFora = t === "FORA DO PADRÃO";
+        // REGRA: Se for 'FORA DO PADRÃO' e não tiver nenhum, NÃO EXIBE na tabela
+        if (isFora && foraCount === 0) return;
+
+        const hasForaVal = stats.totalByType[t] > 0;
+        const styleCell = isFora && hasForaVal ? 'style="color: #dc2626; font-weight: 800; background: #fff1f2;"' : '';
+        
+        let displayLabel = t;
+        if (t === "H H") displayLabel = "H H (HIDRANTE)";
+        if (isFora) displayLabel = '⚠️ FORA DO PADRÃO';
+
+        tableRowsHTML += `
+          <tr ${isFora ? 'style="background: #fff1f2;"' : ''}>
+            <td class="report-type-cell" ${isFora ? 'style="color: #dc2626;"' : ''}>${displayLabel}</td>
+            <td ${styleCell}>${stats.countsByArea[1][t] || 0}</td>
+            <td ${styleCell}>${stats.countsByArea[2][t] || 0}</td>
+            <td ${styleCell}>${stats.countsByArea[3][t] || 0}</td>
+            <td ${styleCell}>${stats.countsByArea[4][t] || 0}</td>
+            <td ${styleCell}>${stats.countsByArea[5][t] || 0}</td>
+            <td style="font-weight: 900; background: #f1f5f9; ${isFora ? 'color: #dc2626;' : 'color: var(--primary-navy);'}">${stats.totalByType[t] || 0}</td>
+          </tr>
+        `;
+      });
+
+      // 2. Cartões Individuais de cada Área
+      let areaCardsHTML = "";
+      for (let a = 1; a <= 5; a++) {
+        const formattedArea = String(a).padStart(2, '0');
+        const itemsRows = stats.standardTypes.map(t => {
+          const qtd = stats.countsByArea[a][t] || 0;
+          const isFora = t === "FORA DO PADRÃO";
+
+          // REGRA: Se for 'FORA DO PADRÃO' e a quantidade for zero nesta área, NÃO EXIBE
+          if (isFora && qtd === 0) return "";
+
+          let rowClass = "zero-qty";
+          if (qtd > 0) {
+            rowClass = isFora ? "fora-qty" : "has-qty";
+          }
+
+          let nameInCard = t;
+          if (t === "H H") nameInCard = "H (HIDRANTE)";
+          if (isFora) nameInCard = "FORA PADRÃO";
+
+          return `
+            <div class="report-count-row ${rowClass}">
+              <span class="report-type-name">${nameInCard}</span>
+              <span class="report-type-qty">QTD: <b>${qtd}</b></span>
+            </div>
+          `;
+        }).join("");
+
+        areaCardsHTML += `
+          <div class="report-area-card">
+            <div class="report-area-header">
+              <span>ÁREA ${formattedArea}</span>
+              <span class="report-area-badge">${stats.totalByArea[a]} unid.</span>
+            </div>
+            <div class="report-area-body">
+              ${itemsRows}
+            </div>
+          </div>
+        `;
+      }
+
+      // 3. Detalhamento dos itens fora do padrão (se existirem)
+      let nonStandardDetailsHTML = "";
+      if (stats.nonStandardItems.length > 0) {
+        const rows = stats.nonStandardItems.map(item => `
+          <tr>
+            <td style="font-weight: 800; color: #b91c1c;">ÁREA ${String(item.area).padStart(2, '0')}</td>
+            <td>${item.sector}</td>
+            <td>${item.loc}</td>
+            <td style="font-weight: 700; color: #dc2626;">${item.tipo}</td>
+            <td style="font-weight: 700; color: #dc2626;">${item.agente}</td>
+            <td>${item.carga}</td>
+          </tr>
+        `).join("");
+
+        nonStandardDetailsHTML = `
+          <div class="report-divergences-box">
+            <div class="divergences-header">
+              <span>⚠️ Extintores Fora do Padrão Identificados (${stats.nonStandardItems.length} unid.)</span>
+              <span style="font-size: 8.5px; font-weight: 600;">Padrões: PQS ABC • PQS BC • CO2 CO2 • AGUA AGUA • EM EM • H H (HIDRANTE)</span>
+            </div>
+            <table class="divergences-table">
+              <thead>
+                <tr>
+                  <th style="width: 10%;">Área</th>
+                  <th style="width: 24%;">Setor</th>
+                  <th style="width: 32%;">Localização</th>
+                  <th style="width: 12%;">Tipo</th>
+                  <th style="width: 12%;">Agente</th>
+                  <th style="width: 10%;">Carga</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      // 4. Card KPI de 'FORA DO PADRÃO' (só é renderizado se foraCount > 0)
+      const kpiForaCardHTML = foraCount > 0 ? `
+        <div class="report-kpi-card kpi-alert">
+          <div class="kpi-label" style="color: #dc2626;">FORA DO PADRÃO</div>
+          <div class="kpi-value" style="color: #dc2626;">${foraCount}</div>
+          <div class="kpi-sub" style="color: #b91c1c;">Divergentes</div>
+        </div>
+      ` : "";
+
+      return `
+        <div class="${isPrintMode ? 'print-page print-report-sheet' : 'sheet-page report-page'}">
+          <div class="sheet-content">
+            <div class="header-container">
+              <div class="logo-box">${getExtinguisherSVG()}</div>
+              <div class="header-text">
+                <h1 style="font-size: 22px;">SEÇÃO CONTRAINCÊNDIO</h1>
+                <h2 style="font-size: 13.5px;">RELATÓRIO QUANTITATIVO DE EXTINTORES E HIDRANTES — ÁREAS 01 A 05</h2>
+              </div>
+              <div class="logo-box">${getShieldSVG()}</div>
+            </div>
+
+            <div class="sub-header" style="margin-bottom: 10px;">
+              <div class="input-box">
+                <div class="input-label">MÊS / ANO:</div>
+                <div class="input-content">${dateArea1}</div>
+              </div>
+              <div class="input-box">
+                <div class="input-label">DATA EMISSÃO:</div>
+                <div class="input-content">${dataHoje}</div>
+              </div>
+              <div class="input-box" style="flex: 1; max-width: 270px;">
+                <div class="input-label">TOTAL GERAL:</div>
+                <div class="input-content" style="font-weight: 900; color: #15803d;">${stats.grandTotal} DISPOSITIVOS</div>
+              </div>
+            </div>
+
+            <!-- Grade de Cards de Indicadores (Adaptação dinâmica) -->
+            <div class="report-kpi-grid">
+              <div class="report-kpi-card kpi-total">
+                <div class="kpi-label">TOTAL GERAL</div>
+                <div class="kpi-value">${stats.grandTotal}</div>
+                <div class="kpi-sub">ÁREAS 1 A 5</div>
+              </div>
+              <div class="report-kpi-card">
+                <div class="kpi-label">PQS ABC</div>
+                <div class="kpi-value">${stats.totalByType["PQS ABC"] || 0}</div>
+                <div class="kpi-sub">Pó Químico Seco</div>
+              </div>
+              <div class="report-kpi-card">
+                <div class="kpi-label">PQS BC</div>
+                <div class="kpi-value">${stats.totalByType["PQS BC"] || 0}</div>
+                <div class="kpi-sub">Pó Químico Seco</div>
+              </div>
+              <div class="report-kpi-card">
+                <div class="kpi-label">CO2 CO2</div>
+                <div class="kpi-value">${stats.totalByType["CO2 CO2"] || 0}</div>
+                <div class="kpi-sub">Dióxido Carbono</div>
+              </div>
+              <div class="report-kpi-card">
+                <div class="kpi-label">AGUA AGUA</div>
+                <div class="kpi-value">${stats.totalByType["AGUA AGUA"] || 0}</div>
+                <div class="kpi-sub">Água Pressurizada</div>
+              </div>
+              <div class="report-kpi-card">
+                <div class="kpi-label">EM EM</div>
+                <div class="kpi-value">${stats.totalByType["EM EM"] || 0}</div>
+                <div class="kpi-sub">Espuma Mecânica</div>
+              </div>
+              <div class="report-kpi-card">
+                <div class="kpi-label">H H</div>
+                <div class="kpi-value">${stats.totalByType["H H"] || 0}</div>
+                <div class="kpi-sub">Hidrante</div>
+              </div>
+              ${kpiForaCardHTML}
+            </div>
+
+            <div class="report-section-title">
+              <span>TODAS AS ÁREAS (QUADRO CONSOLIDADO)</span>
+              <span style="font-size: 9.5px; font-weight: 700;">INSPEÇÃO GERAL</span>
+            </div>
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th style="text-align: left; padding-left: 10px;">TIPO / AGENTE</th>
+                  <th>ÁREA 01</th>
+                  <th>ÁREA 02</th>
+                  <th>ÁREA 03</th>
+                  <th>ÁREA 04</th>
+                  <th>ÁREA 05</th>
+                  <th class="th-total-col">TOTAL GERAL</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${tableRowsHTML}
+              </tbody>
+              <tfoot>
+                <tr class="report-table-total-row">
+                  <td style="text-align: left; padding-left: 10px; font-weight: 900;">TOTAL DE DISPOSITIVOS</td>
+                  <td>${stats.totalByArea[1]}</td>
+                  <td>${stats.totalByArea[2]}</td>
+                  <td>${stats.totalByArea[3]}</td>
+                  <td>${stats.totalByArea[4]}</td>
+                  <td>${stats.totalByArea[5]}</td>
+                  <td class="td-grand-total">${stats.grandTotal}</td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <!-- Seção de Áreas com espaçamento corrigido -->
+            <div class="report-section-title standalone">
+              <span>QUANTITATIVO INDIVIDUAL POR ÁREA</span>
+              <span style="font-size: 9.5px; font-weight: 700;">ÁREA 01 A ÁREA 05</span>
+            </div>
+            <div class="report-areas-grid">
+              ${areaCardsHTML}
+            </div>
+
+            ${nonStandardDetailsHTML}
+
+            <div class="report-footer-box">
+              <div class="report-footer-msg">Declaro que o quantitativo acima reflete fielmente os extintores e hidrantes inspecionados nas Áreas de 01 a 05.</div>
+              <div class="signature-grid" style="margin-top: 6px;">
+                <div class="sig-field">
+                  <span>Resp. pela Conferência:</span>
+                  <div ${!isPrintMode ? 'contenteditable="true"' : ''}></div>
+                </div>
+                <div class="sig-field">
+                  <span>Nome de Guerra:</span>
+                  <div ${!isPrintMode ? 'contenteditable="true"' : ''}></div>
+                </div>
+                <div class="sig-field">
+                  <span>Rubrica:</span>
+                  <div ${!isPrintMode ? 'contenteditable="true"' : ''}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="${isPrintMode ? 'print-page-number' : 'sheet-page-number'}">RELATÓRIO GERAL QUANTITATIVO — PÁG. 01</div>
+        </div>
+      `;
+    }
+
+    /* ========================================================
        GERAÇÃO DE HTML: ETIQUETA APRIMORADA (4 POR FOLHA)
        ======================================================== */
     const monthsList = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
@@ -1310,9 +1952,9 @@
       const rows = monthsList.map(m => `
         <tr>
           <td class="col-m">${m}</td>
-          <td class="col-status"><!--[ &nbsp; ] CONFORME--></td>
+          <td class="col-status"></td>
           <td class="col-rub"><div class="cell-editable"></div></td>
-          <td class="col-dt"><!--/ &nbsp; /--></td>
+          <td class="col-dt"></td>
         </tr>
       `).join("");
 
@@ -1560,6 +2202,11 @@
         if (btnPrintAll) btnPrintAll.style.display = "none";
         if (btnPrintCurr) btnPrintCurr.innerText = "🖨️ Imprimir Etiquetas (4 por Folha)";
         container.innerHTML = buildTagsSheetHTML(false);
+      } else if (currentAreaId === "report") {
+        if (btnNovoSetor) btnNovoSetor.style.display = "none";
+        if (btnPrintAll) btnPrintAll.style.display = "none";
+        if (btnPrintCurr) btnPrintCurr.innerText = "🖨️ Imprimir Relatório";
+        container.innerHTML = buildReportSheetHTML(false);
       } else {
         if (btnNovoSetor) btnNovoSetor.style.display = "inline-flex";
         if (btnPrintAll) btnPrintAll.style.display = "inline-flex";
@@ -1583,6 +2230,8 @@
       tabBtns.forEach(btn => {
         if (areaId === "tags") {
           btn.classList.toggle("active", btn.innerText.includes("Etiquetas"));
+        } else if (areaId === "report") {
+          btn.classList.toggle("active", btn.innerText.includes("Relatório"));
         } else {
           btn.classList.toggle("active", btn.innerText === `Área ${areaId}`);
         }
@@ -1594,6 +2243,8 @@
     function collectDOMToState() {
       const container = document.getElementById("active-sheet-container");
       if (!container || !container.innerHTML.trim()) return;
+
+      if (currentAreaId === "report") return;
 
       if (currentAreaId === "tags") {
         const tagCards = container.querySelectorAll(".tag-card-improved");
@@ -1918,8 +2569,10 @@
       const printContainer = document.getElementById("print-container");
       const activeContainer = document.getElementById("active-sheet-container");
 
-      if (currentAreaId === "tags") {
+      if (currentAreaId === "tags" || (Array.isArray(areaIds) && areaIds.includes("tags"))) {
         printContainer.innerHTML = buildTagsSheetHTML(true);
+      } else if (currentAreaId === "report" || (Array.isArray(areaIds) && areaIds.includes("report"))) {
+        printContainer.innerHTML = buildReportSheetHTML(true);
       } else {
         printContainer.innerHTML = areaIds
           .map(i => paginateArea(getAreaData(i), i))
@@ -1943,12 +2596,16 @@
     function printCurrentArea() {
       if (currentAreaId === "tags") {
         runPrint(["tags"]);
+      } else if (currentAreaId === "report") {
+        runPrint(["report"]);
       } else {
         runPrint([currentAreaId]);
       }
     }
 
-    function printAllAreas() { runPrint([1, 2, 3, 4, 5]); }
+    function printAllAreas() { 
+      runPrint([1, 2, 3, 4, 5]); 
+    }
 
     // Inicia verificando sessão
     checkAuthSession();
