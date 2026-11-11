@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Seção Contraincêndio - Inspeção Mensal</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,700;0,800;0,900;1,700&display=swap" rel="stylesheet">
@@ -24,6 +24,7 @@
       font-family: 'Montserrat', sans-serif;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -32,6 +33,9 @@
       flex-direction: column;
       align-items: center;
       padding: 20px 10px;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
     }
 
     /* Modal / Tela de Login */
@@ -50,7 +54,7 @@
     .login-card {
       background: #ffffff;
       border-radius: 12px;
-      padding: 28px 24px;
+      padding: 28px 22px;
       width: 100%;
       max-width: 380px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.35);
@@ -89,10 +93,10 @@
 
     .login-input {
       width: 100%;
-      padding: 10px 12px;
+      padding: 11px 12px;
       border: 1.5px solid #cbd5e1;
       border-radius: 6px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       outline: none;
       transition: border-color 0.2s;
@@ -107,11 +111,11 @@
       background: var(--primary-navy);
       color: #ffffff;
       font-weight: 800;
-      padding: 10px;
+      padding: 12px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 14px;
       margin-top: 8px;
       transition: opacity 0.2s;
     }
@@ -145,6 +149,8 @@
       padding: 6px 8px;
       border-radius: 8px;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
     }
 
     .tab-btn {
@@ -158,6 +164,7 @@
       cursor: pointer;
       transition: all 0.2s;
       white-space: nowrap;
+      user-select: none;
     }
 
     .tab-btn.active {
@@ -169,7 +176,7 @@
 
     .toolbar {
       background: #ffffff;
-      padding: 10px 16px;
+      padding: 10px 14px;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.12);
       display: flex;
@@ -189,12 +196,13 @@
     .sync-status {
       font-size: 11px;
       font-weight: 700;
-      padding: 5px 10px;
+      padding: 6px 10px;
       border-radius: 4px;
       display: inline-flex;
       align-items: center;
       gap: 4px;
       cursor: default;
+      user-select: none;
     }
     .sync-online { background: #dcfce7; color: #166534; }
     .sync-saving { background: #fef9c3; color: #854d0e; }
@@ -203,7 +211,7 @@
     .btn {
       cursor: pointer;
       border: none;
-      padding: 7px 12px;
+      padding: 8px 12px;
       font-weight: 700;
       font-size: 12px;
       border-radius: 6px;
@@ -211,6 +219,8 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
+      user-select: none;
+      touch-action: manipulation;
     }
     .btn:hover { opacity: 0.88; transform: translateY(-1px); }
     .btn:active { transform: translateY(0); }
@@ -219,11 +229,12 @@
     .btn-neutral { background: #475569; color: #fff; }
     .btn-backup { background: #0284c7; color: #fff; }
     .btn-logout { background: #991b1b; color: #fff; }
-    .btn-danger { background: #dc2626; color: #fff; padding: 3px 6px; font-size: 11px; }
+    .btn-danger { background: #dc2626; color: #fff; padding: 4px 8px; font-size: 11px; }
 
-    /* Folha A4 Padrão */
+    /* Folha Padrão */
     .sheet-page {
       width: 210mm;
+      max-width: 100%;
       min-height: 297mm;
       background: #ffffff;
       padding: 10mm 12mm 14mm 12mm;
@@ -236,6 +247,7 @@
 
     .sheet-content {
       flex: 1;
+      width: 100%;
     }
 
     .sheet-page-number {
@@ -245,7 +257,7 @@
       color: #334155;
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      padding-top: 6px;
+      padding-top: 8px;
       margin-top: auto;
     }
 
@@ -304,7 +316,7 @@
       display: flex;
       align-items: stretch;
       border: 1.5px solid var(--primary-navy);
-      border-radius: 2px;
+      border-radius: 4px;
       overflow: hidden;
       font-size: 11.5px;
       font-weight: 800;
@@ -313,7 +325,7 @@
     .input-label {
       background: var(--primary-navy);
       color: white;
-      padding: 4px 8px;
+      padding: 5px 8px;
       display: flex;
       align-items: center;
       white-space: nowrap;
@@ -321,7 +333,7 @@
     }
 
     .input-content {
-      padding: 4px 8px;
+      padding: 5px 8px;
       min-width: 110px;
       outline: none;
       background: #fff;
@@ -336,22 +348,23 @@
       border: 1.5px solid var(--primary-navy);
       border-radius: 7px;
       overflow: hidden;
-      margin-bottom: 9px;
+      margin-bottom: 10px;
       position: relative;
       page-break-inside: avoid;
       break-inside: avoid;
+      background: #ffffff;
     }
 
     .block-header {
       background: var(--primary-navy);
       color: #ffffff;
-      padding: 3px 12px;
+      padding: 4px 12px;
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 10px;
       font-weight: 900;
-      font-size: 14.5px;
+      font-size: 14px;
       text-transform: uppercase;
     }
 
@@ -364,9 +377,9 @@
     .badge-risk {
       background: var(--risk-baixo);
       color: white;
-      padding: 1px 12px;
+      padding: 2px 12px;
       border-radius: 12px;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 900;
       cursor: pointer;
       user-select: none;
@@ -375,7 +388,7 @@
     .block-actions {
       position: absolute;
       right: 6px;
-      top: 3px;
+      top: 4px;
       display: flex;
       align-items: center;
       gap: 4px;
@@ -386,12 +399,36 @@
       border: none;
       color: #fff;
       font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 3px;
+      padding: 3px 6px;
+      border-radius: 4px;
       cursor: pointer;
+      touch-action: manipulation;
     }
     .btn-action-icon:hover {
       background: rgba(255,255,255,0.35);
+    }
+
+    /* Envoltório responsivo para rolagem horizontal em tabelas */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 2px;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+      height: 6px;
+    }
+    .table-responsive::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+    .table-responsive::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
     }
 
     /* Tabelas Gerais */
@@ -400,11 +437,12 @@
       border-collapse: collapse;
       font-size: 11px;
       text-align: center;
+      min-width: 660px; /* Garante que as colunas não se amassem em telas de celular */
     }
 
     table.data-table th, table.data-table td {
       border: 1px solid var(--table-border);
-      padding: 2px 4px;
+      padding: 4px;
       vertical-align: middle;
     }
 
@@ -420,21 +458,21 @@
       break-inside: avoid;
     }
 
-    .col-tipo { width: 7.5%; }
-    .col-agente { width: 8.5%; }
-    .col-carga { width: 8.5%; }
-    .col-loc { width: 34%; text-align: left; padding-left: 6px; }
+    .col-tipo { width: 8%; }
+    .col-agente { width: 9%; }
+    .col-carga { width: 9%; }
+    .col-loc { width: 33%; text-align: left; padding-left: 6px; }
     .col-nivel { width: 8.5%; }
     .col-visto { width: 7.5%; cursor: pointer; }
-    .col-obs { width: 21%; text-align: left; }
-    .col-actions { width: 4.5%; }
+    .col-obs { width: 20%; text-align: left; }
+    .col-actions { width: 5%; }
 
     .visto-badge {
       background: var(--ok-green);
       color: white;
       font-weight: 900;
-      font-size: 9.5px;
-      padding: 1.5px 5.5px;
+      font-size: 10px;
+      padding: 2px 6px;
       border-radius: 10px;
       display: inline-block;
       user-select: none;
@@ -443,19 +481,25 @@
       color: transparent;
       user-select: none;
       display: inline-block;
-      min-height: 15px;
+      min-height: 18px;
     }
 
     .cell-editable {
       outline: none;
-      min-height: 15px;
+      min-height: 18px;
+      padding: 1px;
+    }
+    .cell-editable:focus {
+      background: #f8fafc;
+      box-shadow: inset 0 0 0 1px var(--primary-navy);
+      border-radius: 2px;
     }
 
     /* Rodapé do Bloco / Assinaturas */
     .block-footer {
       border-top: 1px solid var(--table-border);
       background: #fafbfc;
-      padding: 3px 10px 4px 10px;
+      padding: 5px 10px 6px 10px;
       font-size: 10.5px;
       font-weight: 700;
       color: #111;
@@ -465,7 +509,7 @@
 
     .block-footer-msg {
       text-align: center;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
       font-size: 10.5px;
       font-weight: 800;
     }
@@ -487,26 +531,28 @@
     .sig-field span {
       white-space: nowrap;
       margin-right: 5px;
+      font-size: 10.5px;
     }
 
     .sig-field div {
       flex: 1;
       outline: none;
+      min-height: 18px;
     }
 
     .row-add-wrapper {
       text-align: center;
       background: #f8fafc;
       border-bottom: 1px dashed var(--table-border);
-      padding: 2px;
+      padding: 4px;
     }
     .btn-add-row {
-      background: none;
+      background: #ffffff;
       border: 1px dashed #002244;
       color: #002244;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
       border-radius: 4px;
       cursor: pointer;
     }
@@ -520,7 +566,7 @@
 
     .report-kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
       gap: 6px;
       margin-bottom: 11px;
     }
@@ -529,7 +575,7 @@
       background: #f8fafc;
       border: 1.5px solid #cbd5e1;
       border-radius: 6px;
-      padding: 7px 6px;
+      padding: 8px 6px;
       text-align: center;
     }
 
@@ -549,7 +595,7 @@
     }
 
     .kpi-label {
-      font-size: 8.5px;
+      font-size: 9px;
       font-weight: 800;
       color: #475569;
       text-transform: uppercase;
@@ -565,7 +611,7 @@
     }
 
     .kpi-sub {
-      font-size: 7.8px;
+      font-size: 8px;
       font-weight: 700;
       color: #64748b;
       text-transform: uppercase;
@@ -598,11 +644,12 @@
       margin-bottom: 6px;
       border: 1.5px solid var(--primary-navy);
       border-top: none;
+      min-width: 580px; /* Rolagem em tela pequena */
     }
 
     table.report-table th, table.report-table td {
       border: 1px solid #cbd5e1;
-      padding: 4.5px 6px;
+      padding: 5px 6px;
       text-align: center;
       vertical-align: middle;
     }
@@ -665,7 +712,7 @@
     .report-area-header {
       background: var(--primary-navy);
       color: #ffffff;
-      padding: 5px 8px;
+      padding: 6px 8px;
       font-size: 10.5px;
       font-weight: 900;
       text-transform: uppercase;
@@ -676,7 +723,7 @@
 
     .report-area-badge {
       background: rgba(255, 255, 255, 0.22);
-      padding: 1px 6px;
+      padding: 2px 6px;
       border-radius: 4px;
       font-size: 9.5px;
       font-weight: 800;
@@ -686,7 +733,7 @@
       padding: 6px;
       display: flex;
       flex-direction: column;
-      gap: 3.5px;
+      gap: 4px;
       flex: 1;
     }
 
@@ -695,7 +742,7 @@
       justify-content: space-between;
       align-items: center;
       font-size: 9.5px;
-      padding: 3px 5px;
+      padding: 3.5px 5px;
       border-radius: 3px;
       border-bottom: 1px solid #f1f5f9;
     }
@@ -743,7 +790,7 @@
     .divergences-header {
       background: #dc2626;
       color: #ffffff;
-      padding: 4px 8px;
+      padding: 6px 8px;
       font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
@@ -756,11 +803,12 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 9.5px;
+      min-width: 500px;
     }
 
     table.divergences-table th, table.divergences-table td {
       border: 1px solid #fecaca;
-      padding: 3px 6px;
+      padding: 4px 6px;
       text-align: left;
     }
 
@@ -781,8 +829,8 @@
       border: 1.5px solid var(--primary-navy);
       border-radius: 6px;
       background: #fafbfc;
-      padding: 6px 10px;
-      margin-top: 4px;
+      padding: 8px 10px;
+      margin-top: 6px;
     }
 
     .report-footer-msg {
@@ -799,6 +847,7 @@
        ======================================================== */
     .tags-page-container {
       width: 210mm;
+      max-width: 100%;
       height: 297mm;
       background: #ffffff;
       padding: 6mm;
@@ -1016,7 +1065,147 @@
       display: none;
     }
 
-    /* REGRAS DE IMPRESSÃO */
+    /* ========================================================
+       REGRAS EXCLUSIVAS PARA TELAS / DISPOSITIVOS MÓVEIS
+       ======================================================== */
+    @media screen and (max-width: 860px) {
+      body {
+        padding: 8px 6px;
+      }
+      .top-bar-container {
+        width: 100%;
+      }
+      .sheet-page {
+        width: 100%;
+        min-height: auto;
+        padding: 12px 10px;
+        border-radius: 8px;
+        margin-bottom: 14px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      }
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .toolbar-left, .toolbar-right {
+        width: 100%;
+        justify-content: stretch;
+      }
+      .toolbar-left .btn, .toolbar-right .btn {
+        flex: 1;
+        justify-content: center;
+      }
+      .report-areas-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .tags-page-container {
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 10px;
+      }
+      .tag-cut-guide {
+        height: auto;
+        min-height: 480px;
+      }
+    }
+
+    @media screen and (max-width: 640px) {
+      .header-container {
+        grid-template-columns: 50px 1fr 50px;
+        gap: 6px;
+      }
+      .header-container .logo-box svg {
+        width: 48px;
+        height: 68px;
+      }
+      .header-text h1 {
+        font-size: 16px !important;
+        line-height: 1.15;
+      }
+      .header-text h2 {
+        font-size: 11px !important;
+        line-height: 1.15;
+        margin-top: 2px;
+      }
+      .sub-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+      .sub-header .input-box {
+        width: 100%;
+        max-width: 100% !important;
+      }
+      .block-header {
+        font-size: 12.5px;
+        padding: 6px 10px;
+        flex-wrap: wrap;
+        gap: 6px;
+        position: relative;
+      }
+      .sector-title {
+        text-align: center;
+        min-width: auto;
+      }
+      .block-actions {
+        position: static;
+        width: 100%;
+        justify-content: center;
+        margin-top: 4px;
+      }
+      .signature-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .report-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .report-areas-grid {
+        grid-template-columns: 1fr;
+      }
+      .toolbar-left, .toolbar-right {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .sync-status {
+        grid-column: span 2;
+        justify-content: center;
+      }
+      .btn-logout {
+        grid-column: span 2;
+      }
+      .login-input {
+        font-size: 16px; /* Evita auto-zoom do Safari no iPhone */
+      }
+    }
+
+    @media screen and (max-width: 400px) {
+      .header-container {
+        grid-template-columns: 40px 1fr 40px;
+        gap: 4px;
+      }
+      .header-container .logo-box svg {
+        width: 38px;
+        height: 54px;
+      }
+      .header-text h1 {
+        font-size: 13.5px !important;
+      }
+      .header-text h2 {
+        font-size: 9.5px !important;
+      }
+      .report-kpi-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ========================================================
+       REGRAS EXCLUSIVAS DE IMPRESSÃO (PRESERVA A4 PADRÃO)
+       ======================================================== */
     @media print {
       #auth-overlay {
         display: none !important;
@@ -1034,6 +1223,13 @@
         padding: 0 0 10mm 0;
         width: 100%;
         min-height: auto;
+      }
+      .table-responsive {
+        overflow: visible !important;
+      }
+      table.data-table, table.report-table, table.divergences-table {
+        min-width: 0 !important;
+        width: 100% !important;
       }
 
       #print-container {
@@ -1137,20 +1333,20 @@
       <div class="toolbar-left">
         <span id="sync-indicator" class="sync-status sync-saving" onclick="retrySync()" title="">A ligar...</span>
         <button class="btn btn-primary" id="btn-novo-setor" onclick="addNewBlock()">+ Novo Setor</button>
-        <button class="btn btn-backup" onclick="downloadBackup()">⬇️ Baixar Backup</button>
-        <button class="btn btn-backup" onclick="triggerUploadBackup()">⬆️ Carregar Backup</button>
+        <button class="btn btn-backup" onclick="downloadBackup()">⬇️ Backup</button>
+        <button class="btn btn-backup" onclick="triggerUploadBackup()">⬆️ Carregar</button>
         <input type="file" id="backup-file-input" accept=".json" style="display: none;" onchange="handleBackupUpload(event)">
       </div>
       <div class="toolbar-right">
-        <button class="btn btn-neutral" id="btn-print-curr" onclick="printCurrentArea()">🖨️ Imprimir Área Atual</button>
-        <button class="btn btn-success" id="btn-print-all" onclick="printAllAreas()">🖨️ Imprimir Todas (1 a 5)</button>
+        <button class="btn btn-neutral" id="btn-print-curr" onclick="printCurrentArea()">🖨️ Imprimir Atual</button>
+        <button class="btn btn-success" id="btn-print-all" onclick="printAllAreas()">🖨️ Imprimir Todas</button>
         <button class="btn btn-logout" onclick="logoutSession()">Sair</button>
       </div>
     </div>
   </div>
 
   <!-- Exibição da Folha Ativa (Áreas 1 a 5, Etiquetas ou Relatório) -->
-  <div id="active-sheet-container"></div>
+  <div id="active-sheet-container" style="width: 100%; display: flex; justify-content: center;"></div>
 
   <!-- Contentor Temporário para Impressão -->
   <div id="print-container"></div>
@@ -1697,7 +1893,6 @@
       let tableRowsHTML = "";
       stats.standardTypes.forEach(t => {
         const isFora = t === "FORA DO PADRÃO";
-        // REGRA: Se for 'FORA DO PADRÃO' e não tiver nenhum, NÃO EXIBE na tabela
         if (isFora && foraCount === 0) return;
 
         const hasForaVal = stats.totalByType[t] > 0;
@@ -1728,7 +1923,6 @@
           const qtd = stats.countsByArea[a][t] || 0;
           const isFora = t === "FORA DO PADRÃO";
 
-          // REGRA: Se for 'FORA DO PADRÃO' e a quantidade for zero nesta área, NÃO EXIBE
           if (isFora && qtd === 0) return "";
 
           let rowClass = "zero-qty";
@@ -1781,26 +1975,27 @@
               <span>⚠️ Extintores Fora do Padrão Identificados (${stats.nonStandardItems.length} unid.)</span>
               <span style="font-size: 8.5px; font-weight: 600;">Padrões: PQS ABC • PQS BC • CO2 CO2 • AGUA AGUA • EM EM • H H (HIDRANTE)</span>
             </div>
-            <table class="divergences-table">
-              <thead>
-                <tr>
-                  <th style="width: 10%;">Área</th>
-                  <th style="width: 24%;">Setor</th>
-                  <th style="width: 32%;">Localização</th>
-                  <th style="width: 12%;">Tipo</th>
-                  <th style="width: 12%;">Agente</th>
-                  <th style="width: 10%;">Carga</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${rows}
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table class="divergences-table">
+                <thead>
+                  <tr>
+                    <th style="width: 10%;">Área</th>
+                    <th style="width: 24%;">Setor</th>
+                    <th style="width: 32%;">Localização</th>
+                    <th style="width: 12%;">Tipo</th>
+                    <th style="width: 12%;">Agente</th>
+                    <th style="width: 10%;">Carga</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rows}
+                </tbody>
+              </table>
+            </div>
           </div>
         `;
       }
 
-      // 4. Card KPI de 'FORA DO PADRÃO' (só é renderizado se foraCount > 0)
       const kpiForaCardHTML = foraCount > 0 ? `
         <div class="report-kpi-card kpi-alert">
           <div class="kpi-label" style="color: #dc2626;">FORA DO PADRÃO</div>
@@ -1836,7 +2031,6 @@
               </div>
             </div>
 
-            <!-- Grade de Cards de Indicadores (Adaptação dinâmica) -->
             <div class="report-kpi-grid">
               <div class="report-kpi-card kpi-total">
                 <div class="kpi-label">TOTAL GERAL</div>
@@ -1880,33 +2074,35 @@
               <span>TODAS AS ÁREAS (QUADRO CONSOLIDADO)</span>
               <span style="font-size: 9.5px; font-weight: 700;">INSPEÇÃO GERAL</span>
             </div>
-            <table class="report-table">
-              <thead>
-                <tr>
-                  <th style="text-align: left; padding-left: 10px;">TIPO / AGENTE</th>
-                  <th>ÁREA 01</th>
-                  <th>ÁREA 02</th>
-                  <th>ÁREA 03</th>
-                  <th>ÁREA 04</th>
-                  <th>ÁREA 05</th>
-                  <th class="th-total-col">TOTAL GERAL</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${tableRowsHTML}
-              </tbody>
-              <tfoot>
-                <tr class="report-table-total-row">
-                  <td style="text-align: left; padding-left: 10px; font-weight: 900;">TOTAL DE DISPOSITIVOS</td>
-                  <td>${stats.totalByArea[1]}</td>
-                  <td>${stats.totalByArea[2]}</td>
-                  <td>${stats.totalByArea[3]}</td>
-                  <td>${stats.totalByArea[4]}</td>
-                  <td>${stats.totalByArea[5]}</td>
-                  <td class="td-grand-total">${stats.grandTotal}</td>
-                </tr>
-              </tfoot>
-            </table>
+            <div class="table-responsive">
+              <table class="report-table">
+                <thead>
+                  <tr>
+                    <th style="text-align: left; padding-left: 10px;">TIPO / AGENTE</th>
+                    <th>ÁREA 01</th>
+                    <th>ÁREA 02</th>
+                    <th>ÁREA 03</th>
+                    <th>ÁREA 04</th>
+                    <th>ÁREA 05</th>
+                    <th class="th-total-col">TOTAL GERAL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${tableRowsHTML}
+                </tbody>
+                <tfoot>
+                  <tr class="report-table-total-row">
+                    <td style="text-align: left; padding-left: 10px; font-weight: 900;">TOTAL DE DISPOSITIVOS</td>
+                    <td>${stats.totalByArea[1]}</td>
+                    <td>${stats.totalByArea[2]}</td>
+                    <td>${stats.totalByArea[3]}</td>
+                    <td>${stats.totalByArea[4]}</td>
+                    <td>${stats.totalByArea[5]}</td>
+                    <td class="td-grand-total">${stats.grandTotal}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
 
             <!-- Seção de Áreas com espaçamento corrigido -->
             <div class="report-section-title standalone">
@@ -2110,24 +2306,26 @@
               ` : ''}
             </div>
 
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th class="col-tipo">Tipo</th>
-                  <th class="col-agente">Agente</th>
-                  <th class="col-carga">Carga</th>
-                  <th class="col-loc">Localização</th>
-                  <th class="col-nivel">2º nível</th>
-                  <th class="col-nivel">3º nível</th>
-                  <th class="col-visto">Visto</th>
-                  <th class="col-obs">Observações</th>
-                  ${!isPrintMode ? `<th class="col-actions"></th>` : ''}
-                </tr>
-              </thead>
-              <tbody class="table-body">
-                ${rowsHTML}
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="col-tipo">Tipo</th>
+                    <th class="col-agente">Agente</th>
+                    <th class="col-carga">Carga</th>
+                    <th class="col-loc">Localização</th>
+                    <th class="col-nivel">2º nível</th>
+                    <th class="col-nivel">3º nível</th>
+                    <th class="col-visto">Visto</th>
+                    <th class="col-obs">Observações</th>
+                    ${!isPrintMode ? `<th class="col-actions"></th>` : ''}
+                  </tr>
+                </thead>
+                <tbody class="table-body">
+                  ${rowsHTML}
+                </tbody>
+              </table>
+            </div>
 
             ${!isPrintMode ? `
               <div class="row-add-wrapper">
@@ -2200,7 +2398,7 @@
       if (currentAreaId === "tags") {
         if (btnNovoSetor) btnNovoSetor.style.display = "none";
         if (btnPrintAll) btnPrintAll.style.display = "none";
-        if (btnPrintCurr) btnPrintCurr.innerText = "🖨️ Imprimir Etiquetas (4 por Folha)";
+        if (btnPrintCurr) btnPrintCurr.innerText = "🖨️ Imprimir Etiquetas";
         container.innerHTML = buildTagsSheetHTML(false);
       } else if (currentAreaId === "report") {
         if (btnNovoSetor) btnNovoSetor.style.display = "none";
@@ -2210,7 +2408,7 @@
       } else {
         if (btnNovoSetor) btnNovoSetor.style.display = "inline-flex";
         if (btnPrintAll) btnPrintAll.style.display = "inline-flex";
-        if (btnPrintCurr) btnPrintCurr.innerText = "🖨️ Imprimir Área Atual";
+        if (btnPrintCurr) btnPrintCurr.innerText = "🖨️ Imprimir Atual";
         const currentArea = globalState.areas[currentAreaId] || {
           title: "SEÇÃO CONTRAINCÊNDIO",
           subtitle: `INSPEÇÃO MENSAL DOS EXTINTORES INSTALADOS NA ÁREA ${currentAreaId}`,
@@ -2238,6 +2436,7 @@
       });
 
       renderCurrentArea();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function collectDOMToState() {
@@ -2583,7 +2782,7 @@
       printContainer.style.display = "block";
 
       const restore = () => {
-        activeContainer.style.display = "block";
+        activeContainer.style.display = "flex";
         printContainer.style.display = "none";
         printContainer.innerHTML = "";
         window.removeEventListener("afterprint", restore);
