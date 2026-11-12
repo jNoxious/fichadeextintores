@@ -490,6 +490,17 @@
       min-height: 18px;
     }
 
+    .visto-pending-badge {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde68a;
+      font-weight: 800;
+      font-size: 9px;
+      padding: 1.5px 5px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
     .cell-editable {
       outline: none;
       min-height: 18px;
@@ -2625,10 +2636,12 @@
       const countsByArea = { 1: {}, 2: {}, 3: {}, 4: {}, 5: {} };
       const cargasByAreaAndType = { 1: {}, 2: {}, 3: {}, 4: {}, 5: {} };
       const totalByArea = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+      const totalExtinguishersByArea = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
       const totalByType = {};
       const cargaMap = {};
       const nonStandardItems = [];
       let grandTotal = 0;
+      let grandTotalExtinguishers = 0;
 
       standardTypes.forEach(t => {
         totalByType[t] = 0;
@@ -2651,6 +2664,12 @@
             totalByArea[a]++;
             totalByType[res.type] = (totalByType[res.type] || 0) + 1;
             grandTotal++;
+
+            // Soma sem hidrantes (H H) para o Total por Carga / Área
+            if (res.type !== "H H") {
+              totalExtinguishersByArea[a]++;
+              grandTotalExtinguishers++;
+            }
 
             // Acumula sub-cargas por Área e Tipo
             cargasByAreaAndType[a][res.type][cargaNorm] = (cargasByAreaAndType[a][res.type][cargaNorm] || 0) + 1;
@@ -2694,9 +2713,11 @@
         countsByArea,
         cargasByAreaAndType,
         totalByArea,
+        totalExtinguishersByArea,
         totalByType,
         standardTypes,
         grandTotal,
+        grandTotalExtinguishers,
         nonStandardItems,
         cargaBreakdown
       };
@@ -2708,33 +2729,7 @@
       const dateArea1 = globalState.areas[1]?.date || "/ 2027";
       const foraCount = stats.totalByType["FORA DO PADRÃO"] || 0;
 
-      // 1. Tabela Consolidada por Tipo / Agente (Todas as Áreas)
-      let tableRowsHTML = "";
-      stats.standardTypes.forEach(t => {
-        const isFora = t === "FORA DO PADRÃO";
-        if (isFora && foraCount === 0) return;
-
-        const hasForaVal = stats.totalByType[t] > 0;
-        const styleCell = isFora && hasForaVal ? 'style="color: #dc2626; font-weight: 800; background: #fff1f2;"' : '';
-        
-        let displayLabel = t;
-        if (t === "H H") displayLabel = "H H (HIDRANTE)";
-        if (isFora) displayLabel = '⚠️ FORA DO PADRÃO';
-
-        tableRowsHTML += `
-          <tr ${isFora ? 'style="background: #fff1f2;"' : ''}>
-            <td class="report-type-cell" ${isFora ? 'style="color: #dc2626;"' : ''}>${displayLabel}</td>
-            <td ${styleCell}>${stats.countsByArea[1][t] || 0}</td>
-            <td ${styleCell}>${stats.countsByArea[2][t] || 0}</td>
-            <td ${styleCell}>${stats.countsByArea[3][t] || 0}</td>
-            <td ${styleCell}>${stats.countsByArea[4][t] || 0}</td>
-            <td ${styleCell}>${stats.countsByArea[5][t] || 0}</td>
-            <td style="font-weight: 900; background: #f1f5f9; ${isFora ? 'color: #dc2626;' : 'color: var(--primary-navy);'}">${stats.totalByType[t] || 0}</td>
-          </tr>
-        `;
-      });
-
-      // 2. Tabela Detalhada por Tipo / Agente E CARGA (ex: CO2 06 KG vs CO2 10 KG)
+      // 1. Tabela Detalhada por Tipo / Agente E CARGA (ex: CO2 06 KG vs CO2 10 KG)
       let cargaRowsHTML = "";
       if (stats.cargaBreakdown.length === 0) {
         cargaRowsHTML = `
@@ -2770,7 +2765,7 @@
         });
       }
 
-      // 3. Cartões Individuais de cada Área (com sub-quebra por Carga)
+      // 2. Cartões Individuais de cada Área (com sub-quebra por Carga)
       let areaCardsHTML = "";
       for (let a = 1; a <= 5; a++) {
         const formattedArea = String(a).padStart(2, '0');
@@ -2818,7 +2813,7 @@
           <div class="report-area-card">
             <div class="report-area-header">
               <span>ÁREA ${formattedArea}</span>
-              <span class="report-area-badge">${stats.totalByArea[a]} unid.</span>
+              <span class="report-area-badge">${stats.totalExtinguishersByArea[a]} unid.</span>
             </div>
             <div class="report-area-body">
               ${itemsRows}
@@ -2827,7 +2822,7 @@
         `;
       }
 
-      // 4. Detalhamento dos itens fora do padrão (se existirem)
+      // 3. Detalhamento dos itens fora do padrão (se existirem)
       let nonStandardDetailsHTML = "";
       if (stats.nonStandardItems.length > 0) {
         const rows = stats.nonStandardItems.map(item => `
@@ -2899,15 +2894,15 @@
               </div>
               <div class="input-box" style="flex: 1; max-width: 270px;">
                 <div class="input-label">TOTAL GERAL:</div>
-                <div class="input-content" style="font-weight: 900; color: #15803d;">${stats.grandTotal} DISPOSITIVOS</div>
+                <div class="input-content" style="font-weight: 900; color: #15803d;">${stats.grandTotalExtinguishers} DISPOSITIVOS</div>
               </div>
             </div>
 
             <div class="report-kpi-grid">
               <div class="report-kpi-card kpi-total">
-                <div class="kpi-label">TOTAL GERAL</div>
-                <div class="kpi-value">${stats.grandTotal}</div>
-                <div class="kpi-sub">ÁREAS 1 A 5</div>
+                <div class="kpi-label">TOTAL EXTINTORES</div>
+                <div class="kpi-value">${stats.grandTotalExtinguishers}</div>
+                <div class="kpi-sub">EXCETO HIDRANTES</div>
               </div>
               <div class="report-kpi-card">
                 <div class="kpi-label">PQS ABC</div>
@@ -2943,40 +2938,6 @@
             </div>
 
             <div class="report-section-title">
-              <span>TODAS AS ÁREAS — RESUMO POR TIPO / AGENTE</span>
-              <span style="font-size: 9px; font-weight: 700;">INSPEÇÃO GERAL</span>
-            </div>
-            <div class="table-responsive">
-              <table class="report-table">
-                <thead>
-                  <tr>
-                    <th style="text-align: left; padding-left: 10px;">TIPO / AGENTE</th>
-                    <th>ÁREA 01</th>
-                    <th>ÁREA 02</th>
-                    <th>ÁREA 03</th>
-                    <th>ÁREA 04</th>
-                    <th>ÁREA 05</th>
-                    <th class="th-total-col">TOTAL GERAL</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${tableRowsHTML}
-                </tbody>
-                <tfoot>
-                  <tr class="report-table-total-row">
-                    <td style="text-align: left; padding-left: 10px; font-weight: 900;">TOTAL DE DISPOSITIVOS</td>
-                    <td>${stats.totalByArea[1]}</td>
-                    <td>${stats.totalByArea[2]}</td>
-                    <td>${stats.totalByArea[3]}</td>
-                    <td>${stats.totalByArea[4]}</td>
-                    <td>${stats.totalByArea[5]}</td>
-                    <td class="td-grand-total">${stats.grandTotal}</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-
-            <div class="report-section-title" style="margin-top: 6px;">
               <span>DETALHAMENTO POR TIPO / AGENTE E CARGA (CAPACIDADE)</span>
               <span style="font-size: 9px; font-weight: 700;">TODAS AS ÁREAS</span>
             </div>
@@ -2999,13 +2960,15 @@
                 </tbody>
                 <tfoot>
                   <tr class="report-table-total-row">
-                    <td colspan="2" style="text-align: left; padding-left: 10px; font-weight: 900;">TOTAL POR CARGA / ÁREA</td>
-                    <td>${stats.totalByArea[1]}</td>
-                    <td>${stats.totalByArea[2]}</td>
-                    <td>${stats.totalByArea[3]}</td>
-                    <td>${stats.totalByArea[4]}</td>
-                    <td>${stats.totalByArea[5]}</td>
-                    <td class="td-grand-total">${stats.grandTotal}</td>
+                    <td colspan="2" style="text-align: left; padding-left: 10px; font-weight: 900;">
+                      TOTAL POR CARGA / ÁREA <span style="font-size: 8.5px; font-weight: 700; color: #475569;">(EXCETO HIDRANTES)</span>
+                    </td>
+                    <td>${stats.totalExtinguishersByArea[1]}</td>
+                    <td>${stats.totalExtinguishersByArea[2]}</td>
+                    <td>${stats.totalExtinguishersByArea[3]}</td>
+                    <td>${stats.totalExtinguishersByArea[4]}</td>
+                    <td>${stats.totalExtinguishersByArea[5]}</td>
+                    <td class="td-grand-total">${stats.grandTotalExtinguishers}</td>
                   </tr>
                 </tfoot>
               </table>
