@@ -154,7 +154,7 @@
     }
 
     .tab-btn {
-      padding: 8px 16px;
+      padding: 8px 15px;
       background: #ffffff;
       border: 1.5px solid #94a3b8;
       border-radius: 6px;
@@ -353,6 +353,12 @@
       page-break-inside: avoid;
       break-inside: avoid;
       background: #ffffff;
+      transition: box-shadow 0.3s, border-color 0.3s;
+    }
+
+    .block-card.highlight-sector {
+      box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.45);
+      border-color: #7c3aed;
     }
 
     .block-header {
@@ -437,7 +443,7 @@
       border-collapse: collapse;
       font-size: 11px;
       text-align: center;
-      min-width: 660px; /* Garante que as colunas não se amassem em telas de celular */
+      min-width: 660px;
     }
 
     table.data-table th, table.data-table td {
@@ -558,6 +564,271 @@
     }
 
     /* ========================================================
+       ESTILOS EXCLUSIVOS: PESQUISA AVANÇADA
+       ======================================================== */
+    .search-controls-box {
+      background: #f8fafc;
+      border: 1.5px solid var(--primary-navy);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .search-main-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      min-width: 240px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon-prefix {
+      position: absolute;
+      left: 11px;
+      font-size: 14px;
+      color: #64748b;
+      pointer-events: none;
+    }
+
+    .search-main-input {
+      width: 100%;
+      padding: 10px 34px 10px 34px;
+      border: 1.5px solid #94a3b8;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-main-input:focus {
+      border-color: var(--primary-navy);
+      box-shadow: 0 0 0 3px rgba(0, 34, 68, 0.12);
+    }
+
+    .search-clear-x {
+      position: absolute;
+      right: 8px;
+      background: #e2e8f0;
+      border: none;
+      color: #475569;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .search-clear-x:hover {
+      background: #cbd5e1;
+      color: #0f172a;
+    }
+
+    /* Botão Selectbox (Checkbox estilizado) para Pesquisar Somente no Setor */
+    .sector-only-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #ffffff;
+      border: 1.5px solid #94a3b8;
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #334155;
+      transition: all 0.15s ease-in-out;
+      white-space: nowrap;
+    }
+
+    .sector-only-toggle:hover {
+      border-color: var(--primary-navy);
+    }
+
+    .sector-only-toggle.checked {
+      background: #ede9fe;
+      border-color: #7c3aed;
+      color: #5b21b6;
+      box-shadow: 0 2px 6px rgba(124, 58, 237, 0.18);
+    }
+
+    .sector-only-toggle input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #7c3aed;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    .search-filters-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .filter-field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .filter-field label {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: var(--primary-navy);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .filter-select {
+      width: 100%;
+      padding: 7px 8px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 5px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #1e293b;
+      background: #ffffff;
+      outline: none;
+    }
+
+    .filter-select:focus {
+      border-color: var(--primary-navy);
+    }
+
+    .search-actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .search-hint-text {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .search-print-summary {
+      display: none;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 10px;
+    }
+
+    table.search-results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10.5px;
+      text-align: center;
+      border: 1.5px solid var(--primary-navy);
+      min-width: 560px;
+    }
+
+    table.search-results-table th,
+    table.search-results-table td {
+      border: 1px solid var(--table-border);
+      padding: 5px 4px;
+      vertical-align: middle;
+    }
+
+    table.search-results-table th {
+      background: var(--primary-navy);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    table.search-results-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    table.search-results-table tr:hover td {
+      background: #eff6ff;
+    }
+
+    .area-pill {
+      background: var(--primary-navy);
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 9.5px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      display: inline-block;
+    }
+
+    .sector-cell-wrap {
+      text-align: left;
+      padding-left: 6px !important;
+    }
+
+    .sector-name-bold {
+      font-weight: 800;
+      color: #0f172a;
+      display: block;
+      font-size: 10.5px;
+    }
+
+    .risk-mini-tag {
+      font-size: 8.5px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 8px;
+      color: #ffffff;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    .btn-goto-sector {
+      background: #7c3aed;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 7px;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-goto-sector:hover {
+      background: #6d28d9;
+    }
+
+    .empty-search-box {
+      text-align: center;
+      padding: 36px 16px;
+      border: 1.5px dashed #94a3b8;
+      border-radius: 8px;
+      background: #f8fafc;
+      color: #475569;
+    }
+
+    /* ========================================================
        ESTILOS EXCLUSIVOS: RELATÓRIO QUANTITATIVO
        ======================================================== */
     .report-page {
@@ -575,7 +846,7 @@
       background: #f8fafc;
       border: 1.5px solid #cbd5e1;
       border-radius: 6px;
-      padding: 8px 6px;
+      padding: 7px 6px;
       text-align: center;
     }
 
@@ -603,7 +874,7 @@
     }
 
     .kpi-value {
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 900;
       color: var(--primary-navy);
       line-height: 1.15;
@@ -620,9 +891,9 @@
     .report-section-title {
       background: var(--primary-navy);
       color: #ffffff;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 900;
-      padding: 6px 12px;
+      padding: 5px 12px;
       border-radius: 5px 5px 0 0;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -633,23 +904,23 @@
 
     .report-section-title.standalone {
       border-radius: 6px;
-      margin-top: 14px;
-      margin-bottom: 12px;
+      margin-top: 12px;
+      margin-bottom: 10px;
     }
 
     table.report-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 11px;
-      margin-bottom: 6px;
+      font-size: 10.5px;
+      margin-bottom: 10px;
       border: 1.5px solid var(--primary-navy);
       border-top: none;
-      min-width: 580px; /* Rolagem em tela pequena */
+      min-width: 580px;
     }
 
     table.report-table th, table.report-table td {
       border: 1px solid #cbd5e1;
-      padding: 5px 6px;
+      padding: 4px 6px;
       text-align: center;
       vertical-align: middle;
     }
@@ -658,7 +929,7 @@
       background: #f1f5f9;
       color: var(--primary-navy);
       font-weight: 800;
-      font-size: 11px;
+      font-size: 10.5px;
       text-transform: uppercase;
     }
 
@@ -679,11 +950,22 @@
       color: var(--primary-navy);
     }
 
+    .carga-pill {
+      display: inline-block;
+      background: #e2e8f0;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 9.5px;
+      padding: 1.5px 7px;
+      border-radius: 4px;
+      border: 1px solid #cbd5e1;
+    }
+
     .td-grand-total {
       background: var(--primary-navy) !important;
       color: #ffffff !important;
       font-weight: 900;
-      font-size: 12px;
+      font-size: 11.5px;
     }
 
     .report-table-total-row td {
@@ -712,7 +994,7 @@
     .report-area-header {
       background: var(--primary-navy);
       color: #ffffff;
-      padding: 6px 8px;
+      padding: 5px 8px;
       font-size: 10.5px;
       font-weight: 900;
       text-transform: uppercase;
@@ -733,7 +1015,7 @@
       padding: 6px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
       flex: 1;
     }
 
@@ -742,7 +1024,7 @@
       justify-content: space-between;
       align-items: center;
       font-size: 9.5px;
-      padding: 3.5px 5px;
+      padding: 3px 5px;
       border-radius: 3px;
       border-bottom: 1px solid #f1f5f9;
     }
@@ -776,6 +1058,29 @@
 
     .report-count-row.zero-qty b {
       color: #94a3b8;
+    }
+
+    .report-subcarga-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5px;
+      padding: 1px 4px 3px 10px;
+      margin-bottom: 2px;
+      border-left: 2px solid #86efac;
+      margin-left: 4px;
+    }
+
+    .report-subcarga-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .report-subcarga-item span:last-child {
+      font-weight: 800;
+      color: var(--primary-navy);
     }
 
     /* Box de detalhamento dos itens fora do padrão */
@@ -1098,6 +1403,9 @@
       .report-areas-grid {
         grid-template-columns: repeat(2, 1fr);
       }
+      .search-filters-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
       .tags-page-container {
         width: 100%;
         height: auto;
@@ -1167,6 +1475,16 @@
       .report-areas-grid {
         grid-template-columns: 1fr;
       }
+      .search-filters-grid {
+        grid-template-columns: 1fr;
+      }
+      .sector-only-toggle {
+        width: 100%;
+        justify-content: center;
+      }
+      .search-main-input, .filter-select, .login-input {
+        font-size: 16px; /* Evita auto-zoom do Safari no iPhone */
+      }
       .toolbar-left, .toolbar-right {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1177,9 +1495,6 @@
       }
       .btn-logout {
         grid-column: span 2;
-      }
-      .login-input {
-        font-size: 16px; /* Evita auto-zoom do Safari no iPhone */
       }
     }
 
@@ -1215,8 +1530,12 @@
         padding: 0;
         margin: 0;
       }
-      .top-bar-container, .block-actions, .row-add-wrapper, .col-actions, .col-action-cell {
+      .top-bar-container, .block-actions, .row-add-wrapper, .col-actions, .col-action-cell,
+      .search-controls-box, .col-search-action {
         display: none !important;
+      }
+      .search-print-summary {
+        display: block !important;
       }
       .sheet-page {
         box-shadow: none;
@@ -1227,7 +1546,7 @@
       .table-responsive {
         overflow: visible !important;
       }
-      table.data-table, table.report-table, table.divergences-table {
+      table.data-table, table.report-table, table.divergences-table, table.search-results-table {
         min-width: 0 !important;
         width: 100% !important;
       }
@@ -1253,13 +1572,20 @@
 
       .print-report-sheet {
         width: 210mm;
-        height: 296mm;
-        padding: 7mm 12mm 0 12mm !important;
+        min-height: 296mm;
+        height: auto;
+        padding: 7mm 12mm 12mm 12mm !important;
         position: relative;
-        overflow: hidden;
         background: #ffffff;
-        page-break-after: always;
-        break-after: page;
+        box-sizing: border-box;
+      }
+
+      .print-search-sheet {
+        width: 210mm;
+        min-height: 296mm;
+        padding: 8mm 12mm 12mm 12mm !important;
+        position: relative;
+        background: #ffffff;
         box-sizing: border-box;
       }
 
@@ -1327,6 +1653,7 @@
       <button class="tab-btn" onclick="switchArea(5)">Área 5</button>
       <button class="tab-btn" style="border-color: #0284c7; color: #0284c7;" onclick="switchArea('tags')">🏷️ Etiquetas</button>
       <button class="tab-btn" style="border-color: #15803d; color: #15803d;" onclick="switchArea('report')">📊 Relatório</button>
+      <button class="tab-btn" style="border-color: #7c3aed; color: #7c3aed;" onclick="switchArea('search')">🔍 Pesquisa</button>
     </div>
 
     <div class="toolbar">
@@ -1345,7 +1672,7 @@
     </div>
   </div>
 
-  <!-- Exibição da Folha Ativa (Áreas 1 a 5, Etiquetas ou Relatório) -->
+  <!-- Exibição da Folha Ativa (Áreas 1 a 5, Etiquetas, Relatório ou Pesquisa) -->
   <div id="active-sheet-container" style="width: 100%; display: flex; justify-content: center;"></div>
 
   <!-- Contentor Temporário para Impressão -->
@@ -1437,6 +1764,16 @@
     let currentAreaId = 1;
     let saveTimeout = null;
     let session = null;
+
+    // Estado da Pesquisa (em memória, não vai pro Supabase)
+    let searchFilters = {
+      query: "",
+      onlySector: false,
+      area: "ALL",
+      tipo: "ALL",
+      agente: "ALL",
+      carga: "ALL"
+    };
 
     /* ================= SESSÃO / AUTENTICAÇÃO SUPABASE ================= */
     function storeSession(d) {
@@ -1788,9 +2125,453 @@
       return "var(--risk-baixo)";
     }
 
+    function normalizeSearchStr(str) {
+      return (str || "")
+        .toString()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/₂/g, "2")
+        .toLowerCase()
+        .trim();
+    }
+
+    /* ========================================================
+       SCRIPT DA PESQUISA AVANÇADA (SOMENTE SCRIPT)
+       ======================================================== */
+    function getAllExtinguishersFlat() {
+      const list = [];
+      for (let a = 1; a <= 5; a++) {
+        const area = globalState.areas[a];
+        if (!area || !area.blocks) continue;
+        area.blocks.forEach((block, bIdx) => {
+          (block.items || []).forEach((item, iIdx) => {
+            list.push({
+              area: a,
+              blockIndex: bIdx,
+              itemIndex: iIdx,
+              sector: block.sector || "SEM SETOR",
+              risk: block.risk || "RISCO BAIXO",
+              tipo: item.tipo || "",
+              agente: item.agente || "",
+              carga: item.carga || "",
+              loc: item.loc || "",
+              n2: item.n2 || "",
+              n3: item.n3 || "",
+              visto: !!item.visto,
+              obs: item.obs || ""
+            });
+          });
+        });
+      }
+      return list;
+    }
+
+    function getFilterOptionsFromData() {
+      const all = getAllExtinguishersFlat();
+      const tipos = new Set();
+      const agentes = new Set();
+      const cargas = new Set();
+
+      all.forEach(item => {
+        if (item.tipo && item.tipo.trim()) tipos.add(item.tipo.trim().toUpperCase());
+        if (item.agente && item.agente.trim()) agentes.add(item.agente.trim().toUpperCase());
+        if (item.carga && item.carga.trim()) cargas.add(item.carga.trim().toUpperCase());
+      });
+
+      return {
+        tipos: Array.from(tipos).sort(),
+        agentes: Array.from(agentes).sort(),
+        cargas: Array.from(cargas).sort()
+      };
+    }
+
+    function filterExtinguishers() {
+      const all = getAllExtinguishersFlat();
+      const qNorm = normalizeSearchStr(searchFilters.query);
+
+      const filtered = all.filter(item => {
+        // Filtro por Área
+        if (searchFilters.area !== "ALL" && String(item.area) !== String(searchFilters.area)) {
+          return false;
+        }
+        // Filtro por Tipo
+        if (searchFilters.tipo !== "ALL" && item.tipo.trim().toUpperCase() !== searchFilters.tipo) {
+          return false;
+        }
+        // Filtro por Agente
+        if (searchFilters.agente !== "ALL" && item.agente.trim().toUpperCase() !== searchFilters.agente) {
+          return false;
+        }
+        // Filtro por Carga
+        if (searchFilters.carga !== "ALL" && item.carga.trim().toUpperCase() !== searchFilters.carga) {
+          return false;
+        }
+
+        // Busca textual livre
+        if (qNorm) {
+          if (searchFilters.onlySector) {
+            // Pesquisa SOMENTE pelo nome do Setor
+            const sectorNorm = normalizeSearchStr(item.sector);
+            const tokens = qNorm.split(/\s+/).filter(Boolean);
+            for (const tk of tokens) {
+              if (!sectorNorm.includes(tk)) return false;
+            }
+          } else {
+            // Pesquisa GERAL (Setor, Localização, Tipo, Agente, Carga, Obs, Área)
+            const searchableBlob = normalizeSearchStr(
+              `area ${item.area} area 0${item.area} ${item.sector} ${item.loc} ${item.tipo} ${item.agente} ${item.carga} ${item.obs}`
+            );
+            const tokens = qNorm.split(/\s+/).filter(Boolean);
+            for (const tk of tokens) {
+              if (!searchableBlob.includes(tk)) return false;
+            }
+          }
+        }
+
+        return true;
+      });
+
+      return { filtered, totalAll: all.length };
+    }
+
+    function buildSearchResultsInnerHTML(isPrintMode = false) {
+      const { filtered, totalAll } = filterExtinguishers();
+
+      const uniqueSectors = new Set(filtered.map(i => `${i.area}-${i.sector}`)).size;
+      const uniqueAreas = new Set(filtered.map(i => i.area)).size;
+
+      // Descrição dos filtros ativos (usado na impressão)
+      const activeTags = [];
+      if (searchFilters.query.trim()) {
+        activeTags.push(`${searchFilters.onlySector ? 'Setor' : 'Texto'}: "${searchFilters.query.trim()}"`);
+      }
+      if (searchFilters.area !== "ALL") activeTags.push(`Área: 0${searchFilters.area}`);
+      if (searchFilters.tipo !== "ALL") activeTags.push(`Tipo: ${searchFilters.tipo}`);
+      if (searchFilters.agente !== "ALL") activeTags.push(`Agente: ${searchFilters.agente}`);
+      if (searchFilters.carga !== "ALL") activeTags.push(`Carga: ${searchFilters.carga}`);
+      const filterDesc = activeTags.length > 0 ? activeTags.join(" | ") : "Todos os registros cadastrados (Sem filtros)";
+
+      let tableContent = "";
+      if (filtered.length === 0) {
+        tableContent = `
+          <div class="empty-search-box">
+            <div style="font-size: 28px; margin-bottom: 6px;">🔍</div>
+            <div style="font-size: 13px; font-weight: 800; color: var(--primary-navy); margin-bottom: 4px;">
+              Nenhum extintor ou hidrante encontrado
+            </div>
+            <div style="font-size: 11px; font-weight: 600;">
+              ${searchFilters.onlySector
+                ? 'Nenhum Setor encontrado com esse nome. Desmarque "Pesquisar somente no Setor" para buscar também nas localizações.'
+                : 'Tente remover algum filtro ou buscar por outro termo (Setor, Localização, Tipo, Agente ou Carga).'}
+            </div>
+          </div>
+        `;
+      } else {
+        const rowsHTML = filtered.map(item => {
+          const riskBg = getRiskColor(item.risk);
+
+          return `
+            <tr>
+              <td><span class="area-pill">ÁREA 0${item.area}</span></td>
+              <td class="sector-cell-wrap">
+                <span class="sector-name-bold">${item.sector}</span>
+                <span class="risk-mini-tag" style="background:${riskBg};">${item.risk}</span>
+              </td>
+              <td style="font-weight:800; color:var(--primary-navy);">${item.tipo || "—"}</td>
+              <td style="font-weight:700;">${item.agente || "—"}</td>
+              <td style="font-weight:700;">${item.carga || "—"}</td>
+              <td style="text-align:left; padding-left:6px; font-weight:600;">${item.loc || "—"}</td>
+              ${!isPrintMode ? `
+                <td class="col-search-action">
+                  <button class="btn-goto-sector" title="Abrir este setor na Área 0${item.area}" onclick="goToSector(${item.area}, '${item.sector.replace(/'/g, "\\'")}')">
+                    Abrir ↗
+                  </button>
+                </td>
+              ` : ""}
+            </tr>
+          `;
+        }).join("");
+
+        tableContent = `
+          <div class="table-responsive">
+            <table class="search-results-table">
+              <thead>
+                <tr>
+                  <th style="width: 10%;">Área</th>
+                  <th style="width: 24%; text-align:left; padding-left:6px;">Setor / Risco</th>
+                  <th style="width: 9%;">Tipo</th>
+                  <th style="width: 9%;">Agente</th>
+                  <th style="width: 10%;">Carga</th>
+                  <th style="width: 30%; text-align:left; padding-left:6px;">Localização</th>
+                  ${!isPrintMode ? `<th class="col-search-action" style="width: 8%;">Local</th>` : ""}
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHTML}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="search-print-summary">
+          <strong>Filtros aplicados:</strong> ${filterDesc} &bull; <strong>Resultados:</strong> ${filtered.length} de ${totalAll} dispositivos
+        </div>
+
+        <div class="report-kpi-grid" style="margin-bottom: 10px;">
+          <div class="report-kpi-card kpi-total">
+            <div class="kpi-label">ENCONTRADOS</div>
+            <div class="kpi-value">${filtered.length}</div>
+            <div class="kpi-sub">DE ${totalAll} CADASTRADOS</div>
+          </div>
+          <div class="report-kpi-card">
+            <div class="kpi-label">SETORES</div>
+            <div class="kpi-value">${uniqueSectors}</div>
+            <div class="kpi-sub">SETORES ATINGIDOS</div>
+          </div>
+          <div class="report-kpi-card">
+            <div class="kpi-label">ÁREAS</div>
+            <div class="kpi-value">${uniqueAreas}</div>
+            <div class="kpi-sub">DE 05 ÁREAS</div>
+          </div>
+          <div class="report-kpi-card">
+            <div class="kpi-label">MODO DE BUSCA</div>
+            <div class="kpi-value" style="font-size: 13px; padding: 4px 0; color: ${searchFilters.onlySector ? '#7c3aed' : 'var(--primary-navy)'};">
+              ${searchFilters.onlySector ? 'SOMENTE SETOR' : 'BUSCA GERAL'}
+            </div>
+            <div class="kpi-sub">${searchFilters.onlySector ? 'Filtro Exclusivo' : 'Todos os Campos'}</div>
+          </div>
+        </div>
+
+        <div class="report-section-title" style="margin-bottom: 0;">
+          <span>RESULTADOS DA PESQUISA (${filtered.length})</span>
+          <span style="font-size: 9px; font-weight: 700;">ÁREAS 01 A 05</span>
+        </div>
+        ${tableContent}
+      `;
+    }
+
+    function buildSearchSheetHTML(isPrintMode = false) {
+      const dataHoje = new Date().toLocaleDateString('pt-BR');
+      const opts = getFilterOptionsFromData();
+
+      const tipoOptions = opts.tipos.map(t => `<option value="${t}" ${searchFilters.tipo === t ? 'selected' : ''}>${t}</option>`).join("");
+      const agenteOptions = opts.agentes.map(a => `<option value="${a}" ${searchFilters.agente === a ? 'selected' : ''}>${a}</option>`).join("");
+      const cargaOptions = opts.cargas.map(c => `<option value="${c}" ${searchFilters.carga === c ? 'selected' : ''}>${c}</option>`).join("");
+
+      const placeholderText = searchFilters.onlySector
+        ? "Digite o nome do Setor (ex: Garagem, Almoxarifado)..."
+        : "Pesquisar por Setor, Localização, Tipo, Agente ou Carga...";
+
+      const controlsHTML = !isPrintMode ? `
+        <div class="search-controls-box">
+          <div class="search-main-bar">
+            <div class="search-input-wrap">
+              <span class="search-icon-prefix">🔍</span>
+              <input
+                type="text"
+                id="search-main-input"
+                class="search-main-input"
+                placeholder="${placeholderText}"
+                value="${searchFilters.query.replace(/"/g, '&quot;')}"
+                oninput="updateSearchFilter('query', this.value)"
+              >
+              ${searchFilters.query ? `<button class="search-clear-x" title="Limpar texto" onclick="clearSearchText()">✕</button>` : ''}
+            </div>
+
+            <label id="sector-only-label" class="sector-only-toggle ${searchFilters.onlySector ? 'checked' : ''}" title="Quando marcado, busca apenas pelo nome do Setor e ignora as localizações">
+              <input
+                type="checkbox"
+                id="search-sector-only"
+                ${searchFilters.onlySector ? 'checked' : ''}
+                onchange="toggleOnlySectorFilter(this.checked)"
+              >
+              <span>Pesquisar somente no Setor</span>
+            </label>
+          </div>
+
+          <div class="search-filters-grid">
+            <div class="filter-field">
+              <label>Área</label>
+              <select class="filter-select" onchange="updateSearchFilter('area', this.value)">
+                <option value="ALL" ${searchFilters.area === 'ALL' ? 'selected' : ''}>Todas as Áreas (1 a 5)</option>
+                <option value="1" ${searchFilters.area === '1' ? 'selected' : ''}>Área 01</option>
+                <option value="2" ${searchFilters.area === '2' ? 'selected' : ''}>Área 02</option>
+                <option value="3" ${searchFilters.area === '3' ? 'selected' : ''}>Área 03</option>
+                <option value="4" ${searchFilters.area === '4' ? 'selected' : ''}>Área 04</option>
+                <option value="5" ${searchFilters.area === '5' ? 'selected' : ''}>Área 05</option>
+              </select>
+            </div>
+
+            <div class="filter-field">
+              <label>Tipo</label>
+              <select class="filter-select" onchange="updateSearchFilter('tipo', this.value)">
+                <option value="ALL" ${searchFilters.tipo === 'ALL' ? 'selected' : ''}>Todos os Tipos</option>
+                ${tipoOptions}
+              </select>
+            </div>
+
+            <div class="filter-field">
+              <label>Agente</label>
+              <select class="filter-select" onchange="updateSearchFilter('agente', this.value)">
+                <option value="ALL" ${searchFilters.agente === 'ALL' ? 'selected' : ''}>Todos os Agentes</option>
+                ${agenteOptions}
+              </select>
+            </div>
+
+            <div class="filter-field">
+              <label>Carga</label>
+              <select class="filter-select" onchange="updateSearchFilter('carga', this.value)">
+                <option value="ALL" ${searchFilters.carga === 'ALL' ? 'selected' : ''}>Todas as Cargas</option>
+                ${cargaOptions}
+              </select>
+            </div>
+          </div>
+
+          <div class="search-actions-row">
+            <span class="search-hint-text">💡 Marque <b>"Pesquisar somente no Setor"</b> para filtrar apenas pelo título do setor (ex: Garagem).</span>
+            <button class="btn btn-neutral" style="padding: 6px 12px; font-size: 11px;" onclick="resetSearchFilters()">
+              🔄 Limpar Filtros
+            </button>
+          </div>
+        </div>
+      ` : "";
+
+      return `
+        <div class="${isPrintMode ? 'print-search-sheet' : 'sheet-page'}">
+          <div class="sheet-content">
+            <div class="header-container">
+              <div class="logo-box">${getExtinguisherSVG()}</div>
+              <div class="header-text">
+                <h1 style="font-size: 22px;">SEÇÃO CONTRAINCÊNDIO</h1>
+                <h2 style="font-size: 13.5px;">PESQUISA E RASTREAMENTO DE EXTINTORES — ÁREAS 01 A 05</h2>
+              </div>
+              <div class="logo-box">${getShieldSVG()}</div>
+            </div>
+
+            <div class="sub-header" style="margin-bottom: 10px;">
+              <div class="input-box">
+                <div class="input-label">DATA CONSULTA:</div>
+                <div class="input-content">${dataHoje}</div>
+              </div>
+              <div class="input-box" style="flex: 1; max-width: 340px;">
+                <div class="input-label">ABRANGÊNCIA:</div>
+                <div class="input-content" style="font-weight: 800; color: var(--primary-navy);">TODAS AS ÁREAS (01 A 05)</div>
+              </div>
+            </div>
+
+            ${controlsHTML}
+
+            <div id="search-results-container">
+              ${buildSearchResultsInnerHTML(isPrintMode)}
+            </div>
+          </div>
+
+          <div class="sheet-page-number" style="margin-top: 12px;">CONSULTA E RASTREAMENTO — SEÇÃO CONTRAINCÊNDIO</div>
+        </div>
+      `;
+    }
+
+    function toggleOnlySectorFilter(isChecked) {
+      searchFilters.onlySector = !!isChecked;
+      const lbl = document.getElementById("sector-only-label");
+      if (lbl) lbl.classList.toggle("checked", searchFilters.onlySector);
+
+      const inp = document.getElementById("search-main-input");
+      if (inp) {
+        inp.placeholder = searchFilters.onlySector
+          ? "Digite o nome do Setor (ex: Garagem, Almoxarifado)..."
+          : "Pesquisar por Setor, Localização, Tipo, Agente ou Carga...";
+      }
+
+      const resultsEl = document.getElementById("search-results-container");
+      if (resultsEl) {
+        resultsEl.innerHTML = buildSearchResultsInnerHTML(false);
+      }
+    }
+
+    function updateSearchFilter(key, value) {
+      searchFilters[key] = value;
+      const resultsEl = document.getElementById("search-results-container");
+      if (resultsEl) {
+        resultsEl.innerHTML = buildSearchResultsInnerHTML(false);
+      }
+      if (key === "query") {
+        const wrap = document.querySelector(".search-input-wrap");
+        if (wrap) {
+          let clearBtn = wrap.querySelector(".search-clear-x");
+          if (value && !clearBtn) {
+            clearBtn = document.createElement("button");
+            clearBtn.className = "search-clear-x";
+            clearBtn.title = "Limpar texto";
+            clearBtn.innerText = "✕";
+            clearBtn.onclick = clearSearchText;
+            wrap.appendChild(clearBtn);
+          } else if (!value && clearBtn) {
+            clearBtn.remove();
+          }
+        }
+      }
+    }
+
+    function clearSearchText() {
+      searchFilters.query = "";
+      const inp = document.getElementById("search-main-input");
+      if (inp) {
+        inp.value = "";
+        inp.focus();
+      }
+      updateSearchFilter("query", "");
+    }
+
+    function resetSearchFilters() {
+      searchFilters = {
+        query: "",
+        onlySector: false,
+        area: "ALL",
+        tipo: "ALL",
+        agente: "ALL",
+        carga: "ALL"
+      };
+      renderCurrentArea();
+    }
+
+    function goToSector(areaNumber, sectorName) {
+      switchArea(areaNumber);
+      setTimeout(() => {
+        const cards = document.querySelectorAll(".block-card");
+        for (const card of cards) {
+          const titleEl = card.querySelector(".sector-title");
+          if (titleEl && titleEl.innerText.trim().toUpperCase() === sectorName.trim().toUpperCase()) {
+            card.scrollIntoView({ behavior: "smooth", block: "center" });
+            card.classList.add("highlight-sector");
+            setTimeout(() => card.classList.remove("highlight-sector"), 2200);
+            break;
+          }
+        }
+      }, 100);
+    }
+
     /* ========================================================
        SCRIPT DO RELATÓRIO QUANTITATIVO (SOMENTE SCRIPT)
        ======================================================== */
+    function normalizeCarga(carga) {
+      const c = (carga || "").toUpperCase().trim();
+      if (!c || c === "---" || c === "-" || c === "N/A" || c === "SN" || c === "S/N") {
+        return "SEM CARGA";
+      }
+      // Normaliza "6KG", "6 KG", "06KG" -> "06 KG" e "10KG" -> "10 KG"
+      const m = c.match(/^(\d+)\s*(KG|L|LITROS|G)$/);
+      if (m) {
+        let num = m[1];
+        let unit = m[2] === "LITROS" ? "L" : m[2];
+        if (num.length === 1) num = "0" + num;
+        return `${num} ${unit}`;
+      }
+      return c;
+    }
+
     function classifyExtinguisher(tipo, agente) {
       const t = (tipo || "").toUpperCase().trim().replace(/₂/g, "2");
       const a = (agente || "").toUpperCase().trim().replace(/₂/g, "2");
@@ -1842,8 +2623,10 @@
     function calculateExtinguisherStats() {
       const standardTypes = ["PQS ABC", "PQS BC", "CO2 CO2", "AGUA AGUA", "EM EM", "H H", "FORA DO PADRÃO"];
       const countsByArea = { 1: {}, 2: {}, 3: {}, 4: {}, 5: {} };
+      const cargasByAreaAndType = { 1: {}, 2: {}, 3: {}, 4: {}, 5: {} };
       const totalByArea = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
       const totalByType = {};
+      const cargaMap = {};
       const nonStandardItems = [];
       let grandTotal = 0;
 
@@ -1851,6 +2634,7 @@
         totalByType[t] = 0;
         for (let i = 1; i <= 5; i++) {
           countsByArea[i][t] = 0;
+          cargasByAreaAndType[i][t] = {};
         }
       });
 
@@ -1861,10 +2645,28 @@
         area.blocks.forEach(block => {
           (block.items || []).forEach(item => {
             const res = classifyExtinguisher(item.tipo, item.agente);
+            const cargaNorm = normalizeCarga(item.carga);
+
             countsByArea[a][res.type] = (countsByArea[a][res.type] || 0) + 1;
             totalByArea[a]++;
             totalByType[res.type] = (totalByType[res.type] || 0) + 1;
             grandTotal++;
+
+            // Acumula sub-cargas por Área e Tipo
+            cargasByAreaAndType[a][res.type][cargaNorm] = (cargasByAreaAndType[a][res.type][cargaNorm] || 0) + 1;
+
+            // Acumula matriz consolidada Tipo + Carga
+            const key = `${res.type}||${cargaNorm}`;
+            if (!cargaMap[key]) {
+              cargaMap[key] = {
+                type: res.type,
+                carga: cargaNorm,
+                byArea: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+                total: 0
+              };
+            }
+            cargaMap[key].byArea[a]++;
+            cargaMap[key].total++;
 
             if (!res.isStandard) {
               nonStandardItems.push({
@@ -1880,7 +2682,24 @@
         });
       }
 
-      return { countsByArea, totalByArea, totalByType, standardTypes, grandTotal, nonStandardItems };
+      // Ordena lista de Tipo + Carga seguindo a ordem padrão e depois pela carga
+      const cargaBreakdown = Object.values(cargaMap).sort((x, y) => {
+        const idxX = standardTypes.indexOf(x.type);
+        const idxY = standardTypes.indexOf(y.type);
+        if (idxX !== idxY) return idxX - idxY;
+        return x.carga.localeCompare(y.carga, 'pt-BR', { numeric: true });
+      });
+
+      return {
+        countsByArea,
+        cargasByAreaAndType,
+        totalByArea,
+        totalByType,
+        standardTypes,
+        grandTotal,
+        nonStandardItems,
+        cargaBreakdown
+      };
     }
 
     function buildReportSheetHTML(isPrintMode = false) {
@@ -1889,7 +2708,7 @@
       const dateArea1 = globalState.areas[1]?.date || "/ 2027";
       const foraCount = stats.totalByType["FORA DO PADRÃO"] || 0;
 
-      // 1. Tabela Consolidada (Todas as Áreas)
+      // 1. Tabela Consolidada por Tipo / Agente (Todas as Áreas)
       let tableRowsHTML = "";
       stats.standardTypes.forEach(t => {
         const isFora = t === "FORA DO PADRÃO";
@@ -1915,7 +2734,43 @@
         `;
       });
 
-      // 2. Cartões Individuais de cada Área
+      // 2. Tabela Detalhada por Tipo / Agente E CARGA (ex: CO2 06 KG vs CO2 10 KG)
+      let cargaRowsHTML = "";
+      if (stats.cargaBreakdown.length === 0) {
+        cargaRowsHTML = `
+          <tr>
+            <td colspan="8" style="color: #64748b; padding: 10px;">Nenhum dispositivo cadastrado nas Áreas 01 a 05.</td>
+          </tr>
+        `;
+      } else {
+        stats.cargaBreakdown.forEach(entry => {
+          const isFora = entry.type === "FORA DO PADRÃO";
+          let typeLabel = entry.type;
+          if (entry.type === "H H") typeLabel = "H H (HIDRANTE)";
+          if (isFora) typeLabel = "⚠️ FORA DO PADRÃO";
+
+          const cargaDisplay = (entry.type === "H H" && entry.carga === "SEM CARGA")
+            ? "—"
+            : `<span class="carga-pill">${entry.carga}</span>`;
+
+          const styleAlert = isFora ? 'style="color: #dc2626; font-weight: 800; background: #fff1f2;"' : '';
+
+          cargaRowsHTML += `
+            <tr ${isFora ? 'style="background: #fff1f2;"' : ''}>
+              <td class="report-type-cell" ${isFora ? 'style="color: #dc2626;"' : ''}>${typeLabel}</td>
+              <td>${cargaDisplay}</td>
+              <td ${styleAlert}>${entry.byArea[1] || 0}</td>
+              <td ${styleAlert}>${entry.byArea[2] || 0}</td>
+              <td ${styleAlert}>${entry.byArea[3] || 0}</td>
+              <td ${styleAlert}>${entry.byArea[4] || 0}</td>
+              <td ${styleAlert}>${entry.byArea[5] || 0}</td>
+              <td style="font-weight: 900; background: #f1f5f9; ${isFora ? 'color: #dc2626;' : 'color: var(--primary-navy);'}">${entry.total}</td>
+            </tr>
+          `;
+        });
+      }
+
+      // 3. Cartões Individuais de cada Área (com sub-quebra por Carga)
       let areaCardsHTML = "";
       for (let a = 1; a <= 5; a++) {
         const formattedArea = String(a).padStart(2, '0');
@@ -1934,11 +2789,28 @@
           if (t === "H H") nameInCard = "H (HIDRANTE)";
           if (isFora) nameInCard = "FORA PADRÃO";
 
+          // Sub-linhas das cargas daquele tipo na área
+          let subCargasHTML = "";
+          if (qtd > 0 && t !== "H H") {
+            const cargaMapArea = stats.cargasByAreaAndType[a][t] || {};
+            const cargaEntries = Object.entries(cargaMapArea).sort((x, y) => x[0].localeCompare(y[0], 'pt-BR', { numeric: true }));
+            if (cargaEntries.length > 0) {
+              const subItems = cargaEntries.map(([cLabel, cQtd]) => `
+                <div class="report-subcarga-item">
+                  <span>↳ ${cLabel}</span>
+                  <span>${cQtd}</span>
+                </div>
+              `).join("");
+              subCargasHTML = `<div class="report-subcarga-list">${subItems}</div>`;
+            }
+          }
+
           return `
             <div class="report-count-row ${rowClass}">
               <span class="report-type-name">${nameInCard}</span>
               <span class="report-type-qty">QTD: <b>${qtd}</b></span>
             </div>
+            ${subCargasHTML}
           `;
         }).join("");
 
@@ -1955,7 +2827,7 @@
         `;
       }
 
-      // 3. Detalhamento dos itens fora do padrão (se existirem)
+      // 4. Detalhamento dos itens fora do padrão (se existirem)
       let nonStandardDetailsHTML = "";
       if (stats.nonStandardItems.length > 0) {
         const rows = stats.nonStandardItems.map(item => `
@@ -2005,7 +2877,7 @@
       ` : "";
 
       return `
-        <div class="${isPrintMode ? 'print-page print-report-sheet' : 'sheet-page report-page'}">
+        <div class="${isPrintMode ? 'print-report-sheet' : 'sheet-page report-page'}">
           <div class="sheet-content">
             <div class="header-container">
               <div class="logo-box">${getExtinguisherSVG()}</div>
@@ -2071,8 +2943,8 @@
             </div>
 
             <div class="report-section-title">
-              <span>TODAS AS ÁREAS (QUADRO CONSOLIDADO)</span>
-              <span style="font-size: 9.5px; font-weight: 700;">INSPEÇÃO GERAL</span>
+              <span>TODAS AS ÁREAS — RESUMO POR TIPO / AGENTE</span>
+              <span style="font-size: 9px; font-weight: 700;">INSPEÇÃO GERAL</span>
             </div>
             <div class="table-responsive">
               <table class="report-table">
@@ -2104,10 +2976,44 @@
               </table>
             </div>
 
-            <!-- Seção de Áreas com espaçamento corrigido -->
+            <div class="report-section-title" style="margin-top: 6px;">
+              <span>DETALHAMENTO POR TIPO / AGENTE E CARGA (CAPACIDADE)</span>
+              <span style="font-size: 9px; font-weight: 700;">TODAS AS ÁREAS</span>
+            </div>
+            <div class="table-responsive">
+              <table class="report-table">
+                <thead>
+                  <tr>
+                    <th style="text-align: left; padding-left: 10px;">TIPO / AGENTE</th>
+                    <th>CARGA</th>
+                    <th>ÁREA 01</th>
+                    <th>ÁREA 02</th>
+                    <th>ÁREA 03</th>
+                    <th>ÁREA 04</th>
+                    <th>ÁREA 05</th>
+                    <th class="th-total-col">TOTAL GERAL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${cargaRowsHTML}
+                </tbody>
+                <tfoot>
+                  <tr class="report-table-total-row">
+                    <td colspan="2" style="text-align: left; padding-left: 10px; font-weight: 900;">TOTAL POR CARGA / ÁREA</td>
+                    <td>${stats.totalByArea[1]}</td>
+                    <td>${stats.totalByArea[2]}</td>
+                    <td>${stats.totalByArea[3]}</td>
+                    <td>${stats.totalByArea[4]}</td>
+                    <td>${stats.totalByArea[5]}</td>
+                    <td class="td-grand-total">${stats.grandTotal}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
             <div class="report-section-title standalone">
-              <span>QUANTITATIVO INDIVIDUAL POR ÁREA</span>
-              <span style="font-size: 9.5px; font-weight: 700;">ÁREA 01 A ÁREA 05</span>
+              <span>QUANTITATIVO INDIVIDUAL POR ÁREA (COM CARGAS)</span>
+              <span style="font-size: 9px; font-weight: 700;">ÁREA 01 A ÁREA 05</span>
             </div>
             <div class="report-areas-grid">
               ${areaCardsHTML}
@@ -2134,7 +3040,7 @@
             </div>
           </div>
 
-          <div class="${isPrintMode ? 'print-page-number' : 'sheet-page-number'}">RELATÓRIO GERAL QUANTITATIVO — PÁG. 01</div>
+          <div class="sheet-page-number" style="margin-top: 10px;">RELATÓRIO GERAL QUANTITATIVO — SEÇÃO CONTRAINCÊNDIO</div>
         </div>
       `;
     }
@@ -2405,6 +3311,11 @@
         if (btnPrintAll) btnPrintAll.style.display = "none";
         if (btnPrintCurr) btnPrintCurr.innerText = "🖨️ Imprimir Relatório";
         container.innerHTML = buildReportSheetHTML(false);
+      } else if (currentAreaId === "search") {
+        if (btnNovoSetor) btnNovoSetor.style.display = "none";
+        if (btnPrintAll) btnPrintAll.style.display = "none";
+        if (btnPrintCurr) btnPrintCurr.innerText = "🖨️ Imprimir Pesquisa";
+        container.innerHTML = buildSearchSheetHTML(false);
       } else {
         if (btnNovoSetor) btnNovoSetor.style.display = "inline-flex";
         if (btnPrintAll) btnPrintAll.style.display = "inline-flex";
@@ -2430,6 +3341,8 @@
           btn.classList.toggle("active", btn.innerText.includes("Etiquetas"));
         } else if (areaId === "report") {
           btn.classList.toggle("active", btn.innerText.includes("Relatório"));
+        } else if (areaId === "search") {
+          btn.classList.toggle("active", btn.innerText.includes("Pesquisa"));
         } else {
           btn.classList.toggle("active", btn.innerText === `Área ${areaId}`);
         }
@@ -2443,7 +3356,7 @@
       const container = document.getElementById("active-sheet-container");
       if (!container || !container.innerHTML.trim()) return;
 
-      if (currentAreaId === "report") return;
+      if (currentAreaId === "report" || currentAreaId === "search") return;
 
       if (currentAreaId === "tags") {
         const tagCards = container.querySelectorAll(".tag-card-improved");
@@ -2772,6 +3685,8 @@
         printContainer.innerHTML = buildTagsSheetHTML(true);
       } else if (currentAreaId === "report" || (Array.isArray(areaIds) && areaIds.includes("report"))) {
         printContainer.innerHTML = buildReportSheetHTML(true);
+      } else if (currentAreaId === "search" || (Array.isArray(areaIds) && areaIds.includes("search"))) {
+        printContainer.innerHTML = buildSearchSheetHTML(true);
       } else {
         printContainer.innerHTML = areaIds
           .map(i => paginateArea(getAreaData(i), i))
@@ -2797,6 +3712,8 @@
         runPrint(["tags"]);
       } else if (currentAreaId === "report") {
         runPrint(["report"]);
+      } else if (currentAreaId === "search") {
+        runPrint(["search"]);
       } else {
         runPrint([currentAreaId]);
       }
